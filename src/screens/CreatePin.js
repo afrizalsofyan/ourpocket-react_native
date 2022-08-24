@@ -104,7 +104,7 @@ const style = StyleSheet.create({
   },
   inputArea: {
     marginBottom: 24,
-  }
+  },
 });
 
 export default CreatePin;
