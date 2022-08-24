@@ -16,14 +16,21 @@ const Register = () => {
             subtitle={'Create your account to access Our Pocket.'}
           />
           <View style={style.inputWrapper}>
-            <InputField icon={'user'} placeholder={'Enter your username'} />
-          </View>
-          <View style={style.inputWrapper}>
-            <InputField icon={'envelope'} placeholder={'Enter your e-mail'} />
+            <InputField
+              icon={'ios-person-outline'}
+              placeholder={'Enter your username'}
+            />
           </View>
           <View style={style.inputWrapper}>
             <InputField
-              icon={'lock'}
+              icon={'ios-mail-outline'}
+              placeholder={'Enter your e-mail'}
+              type={'email-address'}
+            />
+          </View>
+          <View style={style.inputWrapper}>
+            <InputField
+              icon={'ios-lock-closed-outline'}
               placeholder={'Enter your password'}
               secure={true}
             />

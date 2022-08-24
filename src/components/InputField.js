@@ -1,6 +1,6 @@
 import {View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {COLOR_GRAY, widthResponsive} from '../styles/constant';
 
 const InputField = ({icon, onChange, placeholder, secure, type, value}) => {
@@ -21,9 +21,9 @@ const InputField = ({icon, onChange, placeholder, secure, type, value}) => {
       </View>
       {secure && (
         <TouchableOpacity onPress={() => setShowPass(!showPass)}>
-          <View style={style.iconWrapper}>
+          <View style={style.iconWrapper2}>
             <Icon
-              name={showPass ? 'eye-slash' : 'eye'}
+              name={showPass ? 'ios-eye-off-outline' : 'ios-eye-outline'}
               size={20}
               color={COLOR_GRAY}
             />
@@ -45,12 +45,20 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: widthResponsive(3),
-    width: widthResponsive(1),
-    marginHorizontal: widthResponsive(1),
+    width: widthResponsive(1.5),
+    marginLeft: widthResponsive(0.1),
+  },
+  iconWrapper2: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    height: widthResponsive(3),
+    width: widthResponsive(1.5),
+    marginRight: widthResponsive(0.1),
   },
   inputWrapper: {
     flex: 1,
     justifyContent: 'center',
+    marginLeft: widthResponsive(1),
   },
 });
 

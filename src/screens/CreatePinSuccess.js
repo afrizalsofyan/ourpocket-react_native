@@ -26,7 +26,9 @@ const CreatePinSuccess = () => {
                   'Your PIN was successfully created and you can now access all the features in Zwallet. Login to your new account and start exploring!'
                 }
               />
-              <Button buttonText={'Login Now'} />
+              <View style={style.buttonWrapper}>
+                <Button buttonText={'Login Now'} />
+              </View>
             </View>
           </>
         }
@@ -45,6 +47,10 @@ const style = StyleSheet.create({
     paddingTop: widthResponsive(2),
     justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
+  },
+  buttonWrapper: {
+    flex: 2,
   },
 });
 
