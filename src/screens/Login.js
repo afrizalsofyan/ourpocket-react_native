@@ -4,7 +4,6 @@ import AuthLayout from '../components/layouts/AuthLayout';
 import HeaderAuthContent from '../components/HeaderAuthContent';
 import InputField from '../components/InputField';
 import {COLOR_PRIMARY, widthResponsive} from '../styles/constant';
-import styles from '../styles/global';
 import Button from '../components/Button';
 
 const Login = () => {

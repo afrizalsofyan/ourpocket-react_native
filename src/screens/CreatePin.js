@@ -1,4 +1,4 @@
-import {View, Text, StatusBar, SafeAreaView, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import React from 'react';
 import ReactNativePinView from 'react-native-pin-view';
 import Icon from 'react-native-vector-icons/Ionicons';

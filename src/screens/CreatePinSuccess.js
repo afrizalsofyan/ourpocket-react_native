@@ -1,7 +1,7 @@
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import {View, StyleSheet, Dimensions} from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {COLOR_PRIMARY, widthResponsive} from '../styles/constant';
+import {widthResponsive} from '../styles/constant';
 import HeaderAuthContent from '../components/HeaderAuthContent';
 import AuthLayout from '../components/layouts/AuthLayout';
 import Button from '../components/Button';
