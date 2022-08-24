@@ -1,6 +1,6 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
-import {TEXT_COLOR_GRAY, widthResponsive} from '../styles/constant';
+import {COLOR_GRAY, widthResponsive} from '../styles/constant';
 
 const HeaderAuthContent = ({title, subtitle}) => {
   return (
@@ -21,7 +21,7 @@ const styleLocal = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: widthResponsive(2),
-    paddingHorizontal: widthResponsive(2.5),
+    // paddingHorizontal: widthResponsive(05),
   },
   titleText: {
     fontSize: widthResponsive(1.3),
@@ -29,7 +29,7 @@ const styleLocal = StyleSheet.create({
     fontWeight: 'bold',
   },
   subtitleText: {
-    color: TEXT_COLOR_GRAY,
+    color: COLOR_GRAY,
     fontSize: widthResponsive(0.9),
     textAlign: 'center',
   },

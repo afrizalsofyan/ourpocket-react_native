@@ -7,17 +7,18 @@ import {COLOR_PRIMARY, widthResponsive} from '../styles/constant';
 import styles from '../styles/global';
 import Button from '../components/Button';
 
-const Login = () => {
+const Register = () => {
   return (
     <AuthLayout
       content={
         <>
           <HeaderAuthContent
-            title={'Login'}
-            subtitle={
-              'Login to your existing account to access all the features in Our Pocket.'
-            }
+            title={'Sign Up'}
+            subtitle={'Create your account to access Our Pocket.'}
           />
+          <View style={style.inputWrapper}>
+            <InputField icon={'user'} placeholder={'Enter your username'} />
+          </View>
           <View style={style.inputWrapper}>
             <InputField icon={'envelope'} placeholder={'Enter your e-mail'} />
           </View>
@@ -28,17 +29,14 @@ const Login = () => {
               secure={true}
             />
           </View>
-          <View style={style.textTouchBox}>
-            <TouchableOpacity>
-              <Text style={style.textTouch}>Forgot password</Text>
-            </TouchableOpacity>
+          <View style={style.marginButton}>
+            <Button disable={false} buttonText="Sign Up" />
           </View>
-          <Button disable={false} buttonText="Login" />
           <View style={style.textWithLink}>
-            <Text>Don’t have an account? Let’s</Text>
+            <Text>Already have an account? Let’s</Text>
             <View style={style.boxLinkText}>
               <TouchableOpacity>
-                <Text style={style.colorBlue}>Sign Up</Text>
+                <Text style={style.colorBlue}>Login</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -72,5 +70,8 @@ const style = StyleSheet.create({
     color: COLOR_PRIMARY,
     fontWeight: 'bold',
   },
+  marginButton: {
+    marginTop: widthResponsive(1.5),
+  },
 });
-export default Login;
+export default Register;

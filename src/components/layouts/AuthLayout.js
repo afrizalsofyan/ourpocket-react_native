@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import React from 'react';
 import {
   BG_COLOR_PRIMARY,
@@ -10,12 +10,12 @@ const AuthLayout = ({content}) => {
   return (
     <>
       <View style={styleLocal.parrent}>
-        <View style={styleLocal.wrapper}>
+        <ScrollView style={styleLocal.wrapper}>
           <View style={styleLocal.header}>
             <Text style={styleLocal.titleHeader}>OurPocket</Text>
           </View>
           <View style={styleLocal.content}>{content}</View>
-        </View>
+        </ScrollView>
       </View>
     </>
   );
@@ -45,6 +45,9 @@ const styleLocal = StyleSheet.create({
     borderTopRightRadius: widthResponsive(2),
     elevation: 1.5,
     backgroundColor: 'white',
+    paddingHorizontal: widthResponsive(1.2),
+    // height:
+    //   Dimensions.get('screen').height - Dimensions.get('screen').width / 2,
   },
 });
 
