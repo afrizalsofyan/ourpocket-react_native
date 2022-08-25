@@ -36,12 +36,16 @@ const Register = ({navigation}) => {
             />
           </View>
           <View style={style.marginButton}>
-            <Button disable={false} buttonText="Sign Up" onPress={()=>navigation.navigate('Login')} />
+            <Button
+              disable={false}
+              buttonText="Sign Up"
+              onPress={() => navigation.navigate('Login')}
+            />
           </View>
           <View style={style.textWithLink}>
             <Text>Already have an account? Let’s</Text>
             <View style={style.boxLinkText}>
-              <TouchableOpacity onPress={()=>navigation.navigate('Login')}>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Text style={style.colorBlue}>Login</Text>
               </TouchableOpacity>
             </View>

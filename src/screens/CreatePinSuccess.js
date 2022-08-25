@@ -6,7 +6,7 @@ import HeaderAuthContent from '../components/HeaderAuthContent';
 import AuthLayout from '../components/layouts/AuthLayout';
 import Button from '../components/Button';
 
-const CreatePinSuccess = () => {
+const CreatePinSuccess = ({navigation}) => {
   return (
     <>
       <AuthLayout
@@ -27,7 +27,10 @@ const CreatePinSuccess = () => {
                 }
               />
               <View style={style.buttonWrapper}>
-                <Button buttonText={'Login Now'} />
+                <Button
+                  buttonText={'Login Now'}
+                  onPress={() => navigation.navigate('Login')}
+                />
               </View>
             </View>
           </>

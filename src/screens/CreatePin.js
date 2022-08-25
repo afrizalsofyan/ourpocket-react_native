@@ -51,12 +51,14 @@ const CreatePin = ({navigation}) => {
                   }
                   if (key === 'custom_right') {
                     Alert.alert(
-                      'Pin: ' + enteredPin,
-                      'Success Crated Pin',
-                      onPress = test => {
-                        navigation.navigate('Login');
-                        console.log('test', test);
-                      },
+                      'Entered Pin: ' + enteredPin,
+                      'Success created Pin',
+                      [
+                        {
+                          onPress: () =>
+                            navigation.navigate('Create Pin Success'),
+                        },
+                      ],
                     );
                   }
                 }}
