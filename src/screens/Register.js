@@ -6,7 +6,7 @@ import InputField from '../components/InputField';
 import {COLOR_PRIMARY, widthResponsive} from '../styles/constant';
 import Button from '../components/Button';
 
-const Register = () => {
+const Register = ({navigation}) => {
   return (
     <AuthLayout
       content={
@@ -36,12 +36,12 @@ const Register = () => {
             />
           </View>
           <View style={style.marginButton}>
-            <Button disable={false} buttonText="Sign Up" />
+            <Button disable={false} buttonText="Sign Up" onPress={()=>navigation.navigate('Login')} />
           </View>
           <View style={style.textWithLink}>
             <Text>Already have an account? Let’s</Text>
             <View style={style.boxLinkText}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={()=>navigation.navigate('Login')}>
                 <Text style={style.colorBlue}>Login</Text>
               </TouchableOpacity>
             </View>

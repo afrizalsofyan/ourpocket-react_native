@@ -5,7 +5,7 @@ import HeaderAuthContent from '../components/HeaderAuthContent';
 import InputField from '../components/InputField';
 import Button from '../components/Button';
 
-const ForgotPassword = () => {
+const ForgotPassword = ({navigation}) => {
   return (
     <AuthLayout
       content={
@@ -25,7 +25,11 @@ const ForgotPassword = () => {
               />
             </View>
             <View style={style.wrapperButton}>
-              <Button buttonText={'Confirm'} disable={false} />
+              <Button
+                buttonText={'Confirm'}
+                disable={false}
+                onPress={() => navigation.navigate('Reset Password')}
+              />
             </View>
           </View>
         </>

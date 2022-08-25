@@ -1,11 +1,11 @@
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Alert} from 'react-native';
 import React from 'react';
 import ReactNativePinView from 'react-native-pin-view';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AuthLayout from '../components/layouts/AuthLayout';
 import HeaderAuthContent from '../components/HeaderAuthContent';
 
-const CreatePin = () => {
+const CreatePin = ({navigation}) => {
   const pinView = React.useRef(null);
   const [showRemoveButton, setShowRemoveButton] = React.useState(false);
   const [enteredPin, setEnteredPin] = React.useState('');
@@ -50,10 +50,14 @@ const CreatePin = () => {
                     pinView.current.clear();
                   }
                   if (key === 'custom_right') {
-                    alert('Entered Pin: ' + enteredPin);
-                  }
-                  if (key === 'three') {
-                    alert("You can't use 3");
+                    Alert.alert(
+                      'Pin: ' + enteredPin,
+                      'Success Crated Pin',
+                      onPress = test => {
+                        navigation.navigate('Login');
+                        console.log('test', test);
+                      },
+                    );
                   }
                 }}
                 customLeftButton={

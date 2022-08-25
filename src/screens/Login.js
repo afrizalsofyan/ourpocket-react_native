@@ -6,7 +6,7 @@ import InputField from '../components/InputField';
 import {COLOR_PRIMARY, widthResponsive} from '../styles/constant';
 import Button from '../components/Button';
 
-const Login = () => {
+const Login = ({navigation}) => {
   return (
     <AuthLayout
       content={
@@ -32,15 +32,20 @@ const Login = () => {
             />
           </View>
           <View style={style.textTouchBox}>
-            <TouchableOpacity>
-              <Text style={style.textTouch}>Forgot password</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Forgot Password')}>
+              <Text style={style.textTouch}>Forgot password ?</Text>
             </TouchableOpacity>
           </View>
-          <Button disable={false} buttonText="Login" />
+          <Button
+            disable={false}
+            buttonText="Login"
+            onPress={() => navigation.navigate('Sign Up')}
+          />
           <View style={style.textWithLink}>
             <Text>Don’t have an account? Let’s</Text>
             <View style={style.boxLinkText}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Sign Up')}>
                 <Text style={style.colorBlue}>Sign Up</Text>
               </TouchableOpacity>
             </View>

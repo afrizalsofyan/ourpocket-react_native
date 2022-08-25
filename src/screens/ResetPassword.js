@@ -6,7 +6,7 @@ import AuthLayout from '../components/layouts/AuthLayout';
 import HeaderAuthContent from '../components/HeaderAuthContent';
 import {widthResponsive} from '../styles/constant';
 
-const ResetPassword = () => {
+const ResetPassword = ({navigation}) => {
   return (
     <AuthLayout
       content={
@@ -35,7 +35,11 @@ const ResetPassword = () => {
               </View>
             </View>
             <View style={style.wrapperButton}>
-              <Button buttonText={'Confirm'} disable={false} />
+              <Button
+                buttonText={'Confirm'}
+                disable={false}
+                onPress={() => navigation.navigate('Login')}
+              />
             </View>
           </View>
         </>
