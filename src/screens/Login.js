@@ -5,6 +5,7 @@ import HeaderAuthContent from '../components/HeaderAuthContent';
 import InputField from '../components/InputField';
 import {COLOR_PRIMARY, widthResponsive} from '../styles/constant';
 import Button from '../components/Button';
+import {StackActions} from '@react-navigation/native';
 
 const Login = ({navigation}) => {
   return (
@@ -40,7 +41,10 @@ const Login = ({navigation}) => {
           <Button
             disable={false}
             buttonText="Login"
-            onPress={() => navigation.navigate('Sign Up')}
+            onPress={() => {
+              // navigation.navigate('Dashboard');
+              navigation.dispatch(StackActions.replace('Dashboard'));
+            }}
           />
           <View style={style.textWithLink}>
             <Text>Don’t have an account? Let’s</Text>

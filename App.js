@@ -8,22 +8,34 @@ import ForgotPassword from './src/screens/ForgotPassword';
 import ResetPassword from './src/screens/ResetPassword';
 import CreatePin from './src/screens/CreatePin';
 import CreatePinSuccess from './src/screens/CreatePinSuccess';
+import Dashboard from './src/screens/privates/Dashboard';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={'Auth'}>
+      <Stack.Navigator initialRouteName={'Login'}>
+        <Stack.Screen
+          options={{headerShown: false}}
+          name={'Login'}
+          component={Login}
+        />
+        <Stack.Screen name={'Sign Up'} component={Register} />
+        <Stack.Screen name={'Forgot Password'} component={ForgotPassword} />
+        <Stack.Screen name={'Reset Password'} component={ResetPassword} />
         <Stack.Screen
           name={'Create Pin Success'}
           component={CreatePinSuccess}
         />
         <Stack.Screen name={'Create Pin'} component={CreatePin} />
-        <Stack.Screen name={'Login'} component={Login} />
-        <Stack.Screen name={'Sign Up'} component={Register} />
-        <Stack.Screen name={'Forgot Password'} component={ForgotPassword} />
-        <Stack.Screen name={'Reset Password'} component={ResetPassword} />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name={'Dashboard'}
+          component={Dashboard}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

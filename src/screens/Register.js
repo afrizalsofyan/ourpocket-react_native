@@ -39,6 +39,7 @@ const Register = ({navigation}) => {
             <Button
               disable={false}
               buttonText="Sign Up"
+              // onPress={() => navigation.dispatch(StackActions.popToTop())}
               onPress={() => navigation.navigate('Login')}
             />
           </View>
