@@ -43,7 +43,7 @@ const Login = ({navigation}) => {
             buttonText="Login"
             onPress={() => {
               // navigation.navigate('Dashboard');
-              navigation.dispatch(StackActions.replace('Dashboard'));
+              navigation.dispatch(StackActions.replace('HomeTab'));
             }}
           />
           <View style={style.textWithLink}>

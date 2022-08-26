@@ -9,6 +9,9 @@ import ResetPassword from './src/screens/ResetPassword';
 import CreatePin from './src/screens/CreatePin';
 import CreatePinSuccess from './src/screens/CreatePinSuccess';
 import Dashboard from './src/screens/privates/Dashboard';
+import HomeTab from './src/screens/privates/HomeTab';
+import History from './src/screens/privates/History';
+import { COLOR_SECONDARY } from './src/styles/constant';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,10 +35,12 @@ const App = () => {
         <Stack.Screen
           options={{
             headerShown: false,
+            headerBackground: COLOR_SECONDARY,
           }}
-          name={'Dashboard'}
-          component={Dashboard}
+          name={'HomeTab'}
+          component={HomeTab}
         />
+        <Stack.Screen name={'History'} component={History} />
       </Stack.Navigator>
     </NavigationContainer>
   );

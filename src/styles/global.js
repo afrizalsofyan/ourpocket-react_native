@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     fontSize: widthResponsive(0.8),
   },
   buttonWraperContent: {
-    marginHorizontal: widthResponsive(0.7),
+    marginRight: widthResponsive(0.7),
   },
 });
 
