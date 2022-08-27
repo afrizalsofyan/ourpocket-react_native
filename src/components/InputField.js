@@ -1,7 +1,7 @@
 import {View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {COLOR_GRAY, widthResponsive} from '../styles/constant';
+import {COLOR_5, COLOR_GRAY, widthResponsive} from '../styles/constant';
 
 const InputField = ({icon, onChange, placeholder, secure, type, value}) => {
   const [showPass, setShowPass] = React.useState(false);
@@ -16,7 +16,8 @@ const InputField = ({icon, onChange, placeholder, secure, type, value}) => {
           keyboardType={type}
           value={value}
           onChangeText={onChange}
-          secureTextEntry={!showPass}
+          secureTextEntry={secure ? !showPass : showPass}
+          style={style.textInputStyle}
         />
       </View>
       {secure && (
@@ -59,6 +60,10 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     marginLeft: widthResponsive(1),
+  },
+  textInputStyle: {
+    color: COLOR_5,
+    fontWeight: '600',
   },
 });
 

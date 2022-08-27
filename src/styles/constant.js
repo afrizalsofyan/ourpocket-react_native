@@ -1,5 +1,7 @@
 import {Dimensions} from 'react-native';
+import 'intl';
 
+import 'intl/locale-data/jsonp/en';
 //color
 export const BG_COLOR_PRIMARY = '#effffd';
 export const COLOR_PRIMARY = '#009fbb';
@@ -14,3 +16,9 @@ export const widthResponsive = size =>
   (Dimensions.get('screen').width * size) / 20;
 export const widthPropScreen = size =>
   (Dimensions.get('screen').width * size) / 2;
+
+export const convertMoney = number =>
+  new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+  }).format(number);

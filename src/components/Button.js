@@ -1,8 +1,8 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
 import styles from '../styles/global';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {widthResponsive} from '../styles/constant';
+import {COLOR_5, widthResponsive} from '../styles/constant';
 
 export const ButtonTransction = ({buttonText, icon}) => {
   return (
@@ -13,6 +13,17 @@ export const ButtonTransction = ({buttonText, icon}) => {
         </View>
         <Text style={styles.textWhiteButton}>{buttonText}</Text>
       </View>
+    </TouchableOpacity>
+  );
+};
+
+export const CardButton = ({btnText, child, onPress}) => {
+  return (
+    <TouchableOpacity
+      style={[styles.flexDirectionRow, style.buttonStyle]}
+      onPress={onPress}>
+      <Text style={style.textButtonStyle}>{btnText}</Text>
+      {child}
     </TouchableOpacity>
   );
 };
@@ -28,5 +39,25 @@ const Button = ({disable, buttonText, onPress}) => {
     </View>
   );
 };
+
+const style = StyleSheet.create({
+  buttonStyle: {
+    width: widthResponsive(19),
+    backgroundColor: 'gainsboro',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: widthResponsive(1),
+    // paddingVertical: widthResponsive(1),
+    height: widthResponsive(4),
+    borderRadius: widthResponsive(0.3),
+    elevation: 2,
+    marginVertical: widthResponsive(0.5),
+  },
+  textButtonStyle: {
+    color: COLOR_5,
+    fontWeight: '700',
+    fontSize: widthResponsive(0.8),
+  },
+});
 
 export default Button;

@@ -9,6 +9,19 @@ import {
 } from './constant';
 
 const styles = StyleSheet.create({
+  rootFlex1: {
+    flex: 1,
+  },
+  wrapperCenter: {
+    justifyContent: 'center',
+    alignItemsL: 'center',
+  },
+  marginDashboardLayout: {
+    marginTop: widthResponsive(6),
+  },
+  marginDashboardLayout2: {
+    marginTop: widthResponsive(10),
+  },
   buttonWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -62,10 +75,12 @@ const styles = StyleSheet.create({
   userCardContent: {
     backgroundColor: 'white',
     elevation: 0.3,
+    borderRadius: widthResponsive(0.7),
   },
   dashboardLayout: {
     backgroundColor: BG_COLOR_PRIMARY,
     height: Dimensions.get('screen').height,
+    flex: 1,
   },
   buttonTransaction: {
     flex: 1,
@@ -87,6 +102,37 @@ const styles = StyleSheet.create({
   },
   buttonWraperContent: {
     marginRight: widthResponsive(0.7),
+  },
+  headerChild: {
+    flexDirection: 'row',
+  },
+  headerChildContent: {
+    flex: 1,
+  },
+  headerContentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: widthResponsive(1),
+  },
+  textLightWhite: {
+    color: 'white',
+    fontWeight: '300',
+    fontSize: widthResponsive(0.6),
+  },
+  textBoldWhite: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: widthResponsive(0.8),
+  },
+  textHeaderWrapper: {
+    marginLeft: widthPropScreen(0.05),
+    width: widthResponsive(6),
+  },
+  flexDirectionRow: {
+    flexDirection: 'row',
+  },
+  flexDirectionColumn: {
+    flexDirection: 'column',
   },
 });
 

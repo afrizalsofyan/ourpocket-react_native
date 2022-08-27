@@ -1,7 +1,12 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import styles from '../styles/global';
-import {COLOR_GRAY, widthPropScreen, widthResponsive} from '../styles/constant';
+import {
+  COLOR_5,
+  COLOR_GRAY,
+  widthPropScreen,
+  widthResponsive,
+} from '../styles/constant';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export const UserCardHeader = ({image, subtitle, onPress}) => {
@@ -43,21 +48,23 @@ export const UserCardHeader = ({image, subtitle, onPress}) => {
   );
 };
 
-export const UserCardContent = ({image, name, type, amount, onPress}) => {
+export const UserCardContent = ({image, name, type, amount, icon}) => {
   return (
     <>
       <View style={styles.userCardContent}>
         <View style={style.userCardRow}>
           <View style={style.rowWrapper2}>
-            <Image
-              source={
-                image
-                //     {
-                //     uri: {image},
-                //   }
-              }
-              style={styles.imgCardUser}
-            />
+            {icon ?? (
+              <Image
+                source={
+                  image
+                  //     {
+                  //     uri: {image},
+                  //   }
+                }
+                style={styles.imgCardUser}
+              />
+            )}
             <View style={style.userCardText}>
               <Text
                 ellipsizeMode="tail"
@@ -74,6 +81,116 @@ export const UserCardContent = ({image, name, type, amount, onPress}) => {
         </View>
       </View>
     </>
+  );
+};
+export const UserCardContent2 = ({image, name, type, amount, icon}) => {
+  return (
+    <>
+      <View style={style.userCardContent}>
+        <View style={style.userCardRow2}>
+          <View style={style.rowWrapper2}>
+            {icon ?? (
+              <Image
+                source={
+                  image
+                  //     {
+                  //     uri: {image},
+                  //   }
+                }
+                style={styles.imgCardUser}
+              />
+            )}
+            <View style={style.userCardText}>
+              <Text
+                ellipsizeMode="tail"
+                numberOfLines={1}
+                style={style.titleContent}>
+                {name}
+              </Text>
+              <Text style={style.subtitleContent}>{type}</Text>
+            </View>
+          </View>
+          <View>
+            <Text style={style.textGreen}>{amount}</Text>
+          </View>
+        </View>
+      </View>
+    </>
+  );
+};
+export const UserCardContent3 = ({image, name, type, amount, icon}) => {
+  return (
+    <>
+      <View style={style.userCardContent}>
+        <View style={style.userCardRow2}>
+          <View style={style.rowWrapper2}>
+            {icon ?? (
+              <Image
+                source={
+                  image
+                  //     {
+                  //     uri: {image},
+                  //   }
+                }
+                style={styles.imgCardUser}
+              />
+            )}
+            <View style={style.userCardText}>
+              <View style={style.marginBottomStyle}>
+                <Text
+                  ellipsizeMode="tail"
+                  numberOfLines={1}
+                  style={style.subtitleContent}>
+                  {name}
+                </Text>
+              </View>
+              <Text style={style.titleContent}>{type}</Text>
+            </View>
+          </View>
+          <View>
+            <Text style={style.textGreen}>{amount}</Text>
+          </View>
+        </View>
+      </View>
+    </>
+  );
+};
+
+export const CardTransaction = ({title, subtitle}) => {
+  return (
+    <>
+      <View style={style.flexCard}>
+        <View style={style.paddingTextCard}>
+          <Text style={style.titleCardTransaction}>{title}</Text>
+        </View>
+        <View style={style.paddingTextCard}>
+          <Text
+            ellipsizeMode="tail"
+            numberOfLines={1}
+            style={style.subtitleContentTransaction}>
+            {subtitle}
+          </Text>
+        </View>
+      </View>
+    </>
+  );
+};
+
+export const CardTopup = ({number, textContent}) => {
+  return (
+    <View style={[style.cardWrapper, style.rowWrapper]}>
+      <View style={style.numberWrapper}>
+        <Text style={style.numberStyle}>{number}</Text>
+      </View>
+      <View style={style.marginContent}>
+        <Text
+          ellipsizeMode="tail"
+          numberOfLines={2}
+          style={style.contentTextStyle}>
+          {textContent}
+        </Text>
+      </View>
+    </View>
   );
 };
 
@@ -97,6 +214,19 @@ const style = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: widthResponsive(1),
     paddingHorizontal: widthResponsive(1),
+  },
+  userCardRow2: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: widthResponsive(0.5),
+    paddingHorizontal: widthResponsive(1),
+  },
+  userCardContent: {
+    backgroundColor: 'white',
+    elevation: 0.3,
+    borderRadius: widthResponsive(0.7),
+    marginHorizontal: widthResponsive(1),
   },
   rowWrapper2: {
     flexDirection: 'row',
@@ -126,5 +256,62 @@ const style = StyleSheet.create({
   textRed: {
     color: '#FF5B37',
     fontWeight: '800',
+  },
+  flexCard: {
+    flex: 1,
+    backgroundColor: 'white',
+    height: widthResponsive(5),
+    margin: widthResponsive(0.5),
+    justifyContent: 'center',
+    padding: widthResponsive(0.5),
+    borderRadius: widthResponsive(0.5),
+    elevation: 3,
+  },
+  titleCardTransaction: {
+    fontSize: widthResponsive(0.7),
+    color: COLOR_5,
+    fontWeight: '400',
+  },
+  subtitleContentTransaction: {
+    fontSize: widthResponsive(0.9),
+    color: COLOR_5,
+    fontWeight: '700',
+  },
+  subtitleCardTransaction: {
+    backgroundColor: 'white',
+    height: widthResponsive(5),
+    margin: widthResponsive(0.5),
+    justifyContent: 'center',
+    padding: widthResponsive(0.5),
+    borderRadius: widthResponsive(0.5),
+    elevation: 3,
+  },
+  paddingTextCard: {
+    paddingVertical: widthResponsive(0.2),
+  },
+  marginBottomStyle: {
+    marginBottom: widthResponsive(0.5),
+  },
+  cardWrapper: {
+    backgroundColor: 'white',
+    padding: widthResponsive(1),
+    borderRadius: widthResponsive(0.5),
+    elevation: 2,
+    marginVertical: widthResponsive(0.5),
+  },
+  numberWrapper: {
+    width: widthResponsive(2),
+    justifyContent: 'center',
+  },
+  numberStyle: {
+    fontSize: widthResponsive(1),
+    color: COLOR_5,
+    fontWeight: 'bold',
+  },
+  contentTextStyle: {
+    lineHeight: 27,
+  },
+  marginContent: {
+    flex: 1,
   },
 });

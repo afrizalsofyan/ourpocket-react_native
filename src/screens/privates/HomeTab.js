@@ -1,11 +1,21 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Dashboard from './Dashboard';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {COLOR_4, widthResponsive} from '../../styles/constant';
-import Transfer from './Transfer';
 import History from './History';
+import HeaderCustom from '../../components/Header';
+import {getHeaderTitle} from '@react-navigation/elements';
+import TransactionStack from './TransactionStack';
+import Profile from './Profile';
+import ProfileStack from './ProfileStack';
 
 const BottomNavigation = createBottomTabNavigator();
 
@@ -28,34 +38,44 @@ const HomeTab = () => {
         name={'Dashboard'}
         component={Dashboard}
       />
-      {/* <BottomNavigation.Screen
+      <BottomNavigation.Screen
         options={{
+          headerTransparent: true,
+          header: ({navigation, options, route, back}) => {
+            const title = getHeaderTitle(options, route.name);
+            return (
+              <HeaderCustom navigation={navigation} title={title} back={back} />
+            );
+          },
           tabBarIcon: ({focused, color, size}) => (
             <Icon name="ios-file-tray-full" color={color} size={size} />
           ),
         }}
         name="History"
         component={History}
-      /> */}
+      />
+      <BottomNavigation.Screen
+        options={{
+          headerShown: false,
+          tabBarIcon: ({focused, color, size}) => (
+            <Icon name="ios-cash" color={color} size={size} />
+          ),
+        }}
+        name="Transaction"
+        component={TransactionStack}
+      />
+      <BottomNavigation.Screen
+        options={{
+          headerShown: false,
+          tabBarIcon: ({focused, color, size}) => (
+            <Icon name="ios-person-sharp" color={color} size={size} />
+          ),
+        }}
+        name="Profile Stack"
+        component={ProfileStack}
+      />
     </BottomNavigation.Navigator>
   );
 };
-
-const style = StyleSheet.create({
-  tabLabel: {
-    color: COLOR_4,
-    fontSize: widthResponsive(0.7),
-  },
-  boxActive: {
-    borderBottomWidth: 2,
-    borderColor: COLOR_4,
-    paddingTop: widthResponsive(0.1),
-  },
-  boxInActive: {
-    borderBottomWidth: 2,
-    borderColor: 'transparent',
-    paddingTop: widthResponsive(0.1),
-  },
-});
 
 export default HomeTab;
