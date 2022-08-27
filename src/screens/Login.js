@@ -49,7 +49,7 @@ const Login = ({navigation}) => {
           <View style={style.textWithLink}>
             <Text>Don’t have an account? Let’s</Text>
             <View style={style.boxLinkText}>
-              <TouchableOpacity onPress={() => navigation.navigate('Sign Up')}>
+              <TouchableOpacity onPress={() => navigation.replace('Sign Up')}>
                 <Text style={style.colorBlue}>Sign Up</Text>
               </TouchableOpacity>
             </View>

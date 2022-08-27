@@ -29,7 +29,11 @@ const App = () => {
           name={'Login'}
           component={Login}
         />
-        <Stack.Screen name={'Sign Up'} component={Register} />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name={'Sign Up'}
+          component={Register}
+        />
         <Stack.Screen name={'Forgot Password'} component={ForgotPassword} />
         <Stack.Screen name={'Reset Password'} component={ResetPassword} />
         <Stack.Screen

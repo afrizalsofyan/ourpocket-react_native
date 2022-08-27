@@ -40,13 +40,13 @@ const Register = ({navigation}) => {
               disable={false}
               buttonText="Sign Up"
               // onPress={() => navigation.dispatch(StackActions.popToTop())}
-              onPress={() => navigation.navigate('Login')}
+              onPress={() => navigation.replace('Login')}
             />
           </View>
           <View style={style.textWithLink}>
             <Text>Already have an account? Let’s</Text>
             <View style={style.boxLinkText}>
-              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <TouchableOpacity onPress={() => navigation.replace('Login')}>
                 <Text style={style.colorBlue}>Login</Text>
               </TouchableOpacity>
             </View>
