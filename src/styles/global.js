@@ -134,6 +134,10 @@ const styles = StyleSheet.create({
   flexDirectionColumn: {
     flexDirection: 'column',
   },
+  errorStyle: {
+    fontSize: 10,
+    color: 'red',
+  },
 });
 
 export default styles;

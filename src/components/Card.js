@@ -194,7 +194,48 @@ export const CardTopup = ({number, textContent}) => {
   );
 };
 
+export const SuccessCard = ({text}) => {
+  return (
+    <View style={style.successCard}>
+      <Text style={style.textCardMessage}>{text}</Text>
+    </View>
+  );
+};
+export const ErrorCard = ({text}) => {
+  return (
+    <View style={style.errorCard}>
+      <Text style={style.errorCardMessage}>{text}</Text>
+    </View>
+  );
+};
+
 const style = StyleSheet.create({
+  successCard: {
+    backgroundColor: 'lightgreen',
+    paddingVertical: widthResponsive(2),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: widthResponsive(0.5),
+    marginBottom: widthResponsive(2),
+  },
+  errorCard: {
+    backgroundColor: 'lightcoral',
+    paddingVertical: widthResponsive(2),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: widthResponsive(0.5),
+    marginBottom: widthResponsive(2),
+  },
+  textCardMessage: {
+    color: COLOR_5,
+    fontSize: widthResponsive(0.8),
+    fontWeight: 'bold',
+  },
+  errorCardMessage: {
+    color: 'white',
+    fontSize: widthResponsive(0.8),
+    fontWeight: 'bold',
+  },
   textTitle: {
     fontSize: widthResponsive(0.8),
     color: 'white',

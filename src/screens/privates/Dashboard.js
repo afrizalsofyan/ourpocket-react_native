@@ -11,9 +11,17 @@ import {COLOR_SECONDARY, widthResponsive} from '../../styles/constant';
 import {ButtonTransction} from '../../components/Button';
 import {TitleContent} from '../../components/Title';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
+import {useSelector} from 'react-redux';
 const data = [1, 2, 3, 4, 5];
 
 const Dashboard = ({navigation}) => {
+  const token = useSelector(state => state.auth.token);
+
+  React.useEffect(() => {
+    if (!token) {
+      navigation.replace('Login');
+    }
+  }, [token, navigation]);
   return (
     <DashboardLayout
       child={

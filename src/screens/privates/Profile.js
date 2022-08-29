@@ -18,8 +18,11 @@ import {
 } from '../../styles/constant';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CardButton} from '../../components/Button';
+import {useDispatch} from 'react-redux';
+import {logout} from '../../redux/reducers/auth';
 
 const Profile = ({route, navigation}) => {
+  const dispatch = useDispatch();
   const image =
     'https://images.unsplash.com/photo-1661395122138-6a5ad27e37a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80';
   const [active, setActive] = React.useState(false);
@@ -122,6 +125,7 @@ const Profile = ({route, navigation}) => {
               <CardButton
                 btnText={'Logout'}
                 onPress={() => {
+                  dispatch(logout());
                   navigation.replace('Login');
                 }}
               />
