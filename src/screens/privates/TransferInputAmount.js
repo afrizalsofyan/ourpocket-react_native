@@ -7,41 +7,89 @@ import {
   Dimensions,
 } from 'react-native';
 import React from 'react';
-import {COLOR_5, COLOR_PRIMARY, widthResponsive} from '../../styles/constant';
+import {
+  COLOR_5,
+  COLOR_PRIMARY,
+  convertMoney,
+  widthResponsive,
+} from '../../styles/constant';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import InputField from '../../components/InputField';
 import Button from '../../components/Button';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
+import {useSelector} from 'react-redux';
+
+const inputSchema = Yup.object().shape({
+  amount: Yup.number().min(10000).required(),
+  notes: Yup.string(),
+});
 
 const TransferInputAmount = ({route, navigation}) => {
-  const data = route.params.data.item;
+  const {data} = route.params;
+  const user = data.item;
+  const otherUser = useSelector(state => state.users.result);
+  console.log(otherUser);
+  const profile = useSelector(state => state.users.profile);
+  const onSubmitAmount = val => {
+    const sendData = {
+      ...val,
+      ...user,
+      balanceLeft: convertMoney(profile.balance - val.amount).split('IDR')[1],
+    };
+    navigation.navigate('Transfer Confirmation', {sendData});
+  };
+
   return (
     <DashboardLayout
       child={
         <ScrollView>
           <View style={style.boxRoot}>
-            <View style={style.box}>
-              <TextInput
-                placeholder="0.00"
-                style={style.inputStyle}
-                keyboardType={'number-pad'}
-                maxLength={7}
-              />
-            </View>
-            <View>
-              <Text style={style.textCenterBalance}>Rp. 120.000,00</Text>
-            </View>
-            <View style={style.box}>
-              <InputField icon={'ios-pencil'} placeholder={'Add some notes'} />
-            </View>
-            <View style={style.box}>
-              <Button
-                buttonText={'Continue'}
-                disable={false}
-                onPress={() =>
-                  navigation.navigate('Transfer Confirmation', {data})
-                }
-              />
-            </View>
+            <Formik
+              validationSchema={inputSchema}
+              initialValues={{amount: 0, notes: ''}}
+              onSubmit={onSubmitAmount}>
+              {({handleSubmit, handleChange, values, errors, isValid}) => (
+                <>
+                  <View style={style.box}>
+                    <TextInput
+                      placeholder="0.00"
+                      style={style.inputStyle}
+                      keyboardType={'number-pad'}
+                      maxLength={7}
+                      value={values.amount}
+                      onChangeText={handleChange('amount')}
+                    />
+                    {errors.amount && (
+                      <Text style={style.errorStyle}>{errors.amount}</Text>
+                    )}
+                  </View>
+                  <View>
+                    <Text style={style.textCenterBalance}>{`Rp. ${
+                      convertMoney(profile.balance).split('IDR')[1]
+                    }`}</Text>
+                  </View>
+                  <View style={style.box}>
+                    <InputField
+                      icon={'ios-pencil'}
+                      placeholder={'Add some notes'}
+                      value={values.notes}
+                      onChange={handleChange('notes')}
+                    />
+                    {errors.notes && (
+                      <Text style={style.errorStyle}>{errors.notes}</Text>
+                    )}
+                  </View>
+                  <View style={style.box}>
+                    <Button
+                      buttonText={'Continue'}
+                      disable={!isValid}
+                      onPress={handleSubmit}
+                    />
+                  </View>
+                </>
+              )}
+            </Formik>
           </View>
         </ScrollView>
       }
@@ -68,6 +116,11 @@ const style = StyleSheet.create({
   boxRoot: {
     height: Dimensions.get('screen').height - widthResponsive(15),
     justifyContent: 'center',
+  },
+  errorStyle: {
+    fontSize: 10,
+    color: 'red',
+    textAlign: 'center',
   },
 });
 

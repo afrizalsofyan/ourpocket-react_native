@@ -5,10 +5,14 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import ReactNativePinView from 'react-native-pin-view';
 import HeaderAuthContent from '../../components/HeaderAuthContent';
 import {COLOR_GRAY} from '../../styles/constant';
+import {useDispatch, useSelector} from 'react-redux';
+import {getSomeTransaction, transferTransaction} from '../../redux/asyncActions/transaction';
 
 const PinConfirmation = ({route, navigation}) => {
-  const data = route.params.data;
-  console.log(data);
+  const dispatch = useDispatch();
+  const {data} = route.params;
+  const pin = useSelector(state => state.users.profile.pin_number);
+  const token = useSelector(state => state.auth.token);
   const pinView = React.useRef();
   const [showRemoveButton, setShowRemoveButton] = React.useState(false);
   const [enteredPin, setEnteredPin] = React.useState('');
@@ -56,7 +60,7 @@ const PinConfirmation = ({route, navigation}) => {
                     pinView.current.clear();
                   }
                   if (key === 'custom_right') {
-                    if (Number(enteredPin) != dummyPin) {
+                    if (Number(enteredPin) != pin) {
                       Alert.alert('Failed!!!', 'Your pin is wrong.', [
                         {
                           onPress: () =>
@@ -66,8 +70,19 @@ const PinConfirmation = ({route, navigation}) => {
                     } else {
                       Alert.alert('Success', 'Pin is matched', [
                         {
-                          onPress: () =>
-                            navigation.navigate('Transfer Sucess', {data}),
+                          onPress: () => {
+                            const senData = {
+                              recipient_id: data.id,
+                              notes: data.notes,
+                              amount: data.amount,
+                              type_id: 14,
+                              pin: enteredPin,
+                              token: token,
+                            };
+                            dispatch(transferTransaction([senData, (data)=>{console.log(data)}]));
+                            dispatch(getSomeTransaction({token: token}));
+                            navigation.navigate('Transfer Sucess', {data});
+                          },
                         },
                       ]);
                     }

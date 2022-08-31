@@ -4,24 +4,34 @@ import {
   FlatList,
   TouchableHighlight,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import React from 'react';
 import {UserCardContent, UserCardHeader} from '../../components/Card';
-import {COLOR_SECONDARY, widthResponsive} from '../../styles/constant';
+import {
+  COLOR_SECONDARY,
+  convertMoney,
+  widthResponsive,
+} from '../../styles/constant';
 import {ButtonTransction} from '../../components/Button';
 import {TitleContent} from '../../components/Title';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import {getSomeTransaction} from '../../redux/asyncActions/transaction';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 const data = [1, 2, 3, 4, 5];
 
 const Dashboard = ({navigation}) => {
   const token = useSelector(state => state.auth.token);
-
+  const dispatch = useDispatch();
+  const transaction = useSelector(state => state.transaction.results);
+  const profile = useSelector(state => state.users.profile);
   React.useEffect(() => {
-    if (!token) {
-      navigation.replace('Login');
+    if (token) {
+      dispatch(getSomeTransaction({token: token}));
+      // navigation.replace('Login');
     }
-  }, [token, navigation]);
+  }, [dispatch, token, navigation]);
   return (
     <DashboardLayout
       child={
@@ -29,51 +39,53 @@ const Dashboard = ({navigation}) => {
           <StatusBar translucent={false} backgroundColor={COLOR_SECONDARY} />
           <UserCardHeader
             image={{
-              uri: 'https://images.unsplash.com/photo-1661395122138-6a5ad27e37a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
+              uri: profile.photo_url,
             }}
-            subtitle={'Rp. 120.000,00'}
+            subtitle={`Rp. ${convertMoney(profile.balance).split('IDR')[1]}`}
             onPress={() => console.log('notif push')}
           />
           <View style={styleLocal.buttonWrapper}>
             <ButtonTransction icon={'ios-arrow-up'} buttonText="Transfer" />
             <ButtonTransction icon={'ios-add'} buttonText="TopUp" />
           </View>
-          <TitleContent
-            titleText={'Transaction History'}
-            titleLink={'See all'}
-            onPress={() => navigation.navigate('Transaction Detail')}
-          />
           <FlatList
-            data={data.map((e, i) => {
-              return {
-                card: (
-                  <>
-                    <UserCardContent
-                      image={{
-                        uri: 'https://images.unsplash.com/photo-1661395122138-6a5ad27e37a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-                      }}
-                      name={'Jenifer Liou'}
-                      type={'Transfer'}
-                      amount={'+Rp50.000'}
-                      onPress={() => console.log('card user pushed')}
-                    />
-                  </>
-                ),
-                key: `item${i}`,
-              };
-            })}
+            ListHeaderComponent={
+              <TitleContent
+                titleText={'Transaction History'}
+                titleLink={'See all'}
+                onPress={() => navigation.navigate('Transaction Detail')}
+              />
+            }
+            data={transaction}
             contentContainerStyle={styleLocal.containerList}
-            renderItem={({item, index, separators}) => (
+            renderItem={({item}) => (
               <>
-                <View style={styleLocal.paddingBottomCard}>
-                  <TouchableHighlight
-                    key={item.key}
-                    onPress={() => console.log('item ' + index)}
-                    onShowUnderlay={separators.highlight}
-                    onHideUnderlay={separators.unhighlight}>
-                    <View>{item.card}</View>
-                  </TouchableHighlight>
-                </View>
+                <TouchableOpacity
+                  style={styleLocal.paddingBottomCard}
+                  onPress={() => console.log('card user pushed ' + item.id)}>
+                  <UserCardContent
+                    image={{
+                      uri: item.image_recipient,
+                    }}
+                    icon={
+                      !item.image_recipient ? (
+                        <View style={styleLocal.iconBox}>
+                          <Icon
+                            name="attach-money"
+                            size={widthResponsive(1.5)}
+                          />
+                        </View>
+                      ) : null
+                    }
+                    name={
+                      item.type === 'topup' || item.type === 'accept'
+                        ? item.sender
+                        : item.recipient
+                    }
+                    type={item.type}
+                    amount={convertMoney(item.amount)}
+                  />
+                </TouchableOpacity>
               </>
             )}
           />
@@ -92,11 +104,15 @@ const styleLocal = StyleSheet.create({
   },
   buttonWrapper: {
     height: widthResponsive(4),
-    marginVertical: widthResponsive(1),
+    marginTop: widthResponsive(1),
+    marginBottom: widthResponsive(0.5),
     flexDirection: 'row',
   },
   containerList: {
     paddingVertical: widthResponsive(1.5),
+  },
+  iconBox: {
+    padding: widthResponsive(0.3),
   },
 });
 export default Dashboard;

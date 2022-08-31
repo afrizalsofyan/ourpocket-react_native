@@ -34,6 +34,7 @@ export const http = token => {
   }
   return axios.create({
     headers,
-    baseURL: backendUrl,
+    baseURL: 'http://192.168.100.11:3335',
+    // baseURL: backendUrl,
   });
 };

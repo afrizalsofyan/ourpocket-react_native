@@ -5,8 +5,17 @@ import {UserCardContent} from '../../components/Card';
 import styles from '../../styles/global';
 import {COLOR_5, widthResponsive} from '../../styles/constant';
 import {dummy} from './History';
+import {useDispatch, useSelector} from 'react-redux';
+import {getAllUser, getOtherUser} from '../../redux/asyncActions/user';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Transfer = ({navigation}) => {
+  const users = useSelector(state => state.users.results);
+  const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.token);
+  React.useEffect(() => {
+    dispatch(getAllUser({token: token}));
+  }, [dispatch, token]);
   return (
     <DashboardLayout
       child={
@@ -23,20 +32,26 @@ const Transfer = ({navigation}) => {
               </View>
             </View>
             <FlatList
-              data={dummy}
-              renderItem={({item}) => (
+              data={users}
+              renderItem={({item, index}) => (
                 <TouchableOpacity
                   style={style.cardPadding}
-                  onPress={() =>
+                  onPress={() => {
+                    dispatch(getOtherUser({token: token, id: item.id}));
                     navigation.navigate('Input Amount', {
                       data: {item},
-                    })
-                  }>
+                    });
+                  }}>
                   <UserCardContent
-                    image={{uri: item.img}}
-                    name={item.name}
-                    amount={item.amount}
-                    type={item.type}
+                    image={{uri: item.photo_url}}
+                    icon={
+                      !item.photo_url ? (
+                        <Icon name="ios-person" size={widthResponsive(3)} />
+                      ) : null
+                    }
+                    name={item.username}
+                    // amount={item.}
+                    type={item.phone_number ?? '-'}
                   />
                 </TouchableOpacity>
               )}

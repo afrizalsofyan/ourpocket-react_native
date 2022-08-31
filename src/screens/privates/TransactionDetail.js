@@ -6,22 +6,31 @@ import {
   FlatList,
   TouchableHighlight,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import React from 'react';
-import {COLOR_5, COLOR_SECONDARY, widthResponsive} from '../../styles/constant';
+import {
+  COLOR_5,
+  COLOR_SECONDARY,
+  convertMoney,
+  widthResponsive,
+} from '../../styles/constant';
 import {TitleContent} from '../../components/Title';
 import {UserCardContent} from '../../components/Card';
+import {useSelector} from 'react-redux';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const data = [1, 2, 3, 4, 5];
 
 const TransactionDetail = ({navigation}) => {
+  const transaction = useSelector(state => state.transaction.results);
   const day = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
   const dummyValue = [100, 40, 60, 70, 50, 90, 80];
   const value = 100;
   let arrValue = [];
   arrValue = dummyValue.map((e, i) => {
     return (
-      <View>
+      <View key={i}>
         <View
           style={
             i === 0 || i === 1 || i === 5
@@ -37,48 +46,49 @@ const TransactionDetail = ({navigation}) => {
   });
   return (
     <>
-      <ScrollView style={style.wrapper}>
-        <View style={style.titleText}>
-          <Text style={style.titleTextStyle}>In This Week</Text>
-        </View>
-        <View style={style.graphicWrapper}>{arrValue}</View>
-      </ScrollView>
-      <TitleContent
-        titleText={'Transaction History'}
-        titleLink={'See all'}
-        onPress={() => navigation.navigate('History')}
-      />
       <FlatList
-        data={data.map((e, i) => {
-          return {
-            card: (
-              <>
-                <UserCardContent
-                  image={{
-                    uri: 'https://images.unsplash.com/photo-1661395122138-6a5ad27e37a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-                  }}
-                  name={'Jenifer Liou'}
-                  type={'Transfer'}
-                  amount={'+Rp50.000'}
-                  onPress={() => console.log('card user pushed')}
-                />
-              </>
-            ),
-            key: `item${i}`,
-          };
-        })}
-        contentContainerStyle={styleLocal.containerList}
-        renderItem={({item, index, separators}) => (
+        ListHeaderComponent={
           <>
-            <View style={styleLocal.paddingBottomCard}>
-              <TouchableHighlight
-                key={item.key}
-                onPress={() => console.log('item ' + index)}
-                onShowUnderlay={separators.highlight}
-                onHideUnderlay={separators.unhighlight}>
-                <View>{item.card}</View>
-              </TouchableHighlight>
+            <View style={style.wrapper}>
+              <View style={style.titleText}>
+                <Text style={style.titleTextStyle}>In This Week</Text>
+              </View>
+              <View style={style.graphicWrapper}>{arrValue}</View>
             </View>
+            <TitleContent
+              titleText={'Transaction History'}
+              titleLink={'See all'}
+              onPress={() => navigation.navigate('History')}
+            />
+          </>
+        }
+        data={transaction}
+        contentContainerStyle={styleLocal.containerList}
+        renderItem={({item}) => (
+          <>
+            <TouchableOpacity
+              style={styleLocal.paddingBottomCard}
+              onPress={() => console.log('card user pushed ' + item.id)}>
+              <UserCardContent
+                image={{
+                  uri: item.image_recipient,
+                }}
+                icon={
+                  !item.image_recipient ? (
+                    <View style={styleLocal.iconBox}>
+                      <Icon name="attach-money" size={widthResponsive(1.5)} />
+                    </View>
+                  ) : null
+                }
+                name={
+                  item.type === 'topup' || item.type === 'accept'
+                    ? item.sender
+                    : item.recipient
+                }
+                type={item.type}
+                amount={convertMoney(item.amount)}
+              />
+            </TouchableOpacity>
           </>
         )}
       />
@@ -109,7 +119,7 @@ const style = StyleSheet.create({
   },
   wrapper: {
     paddingHorizontal: widthResponsive(1),
-    height: Dimensions.get('screen').height,
+    height: Dimensions.get('screen').height / 2.5,
   },
   titleText: {
     paddingVertical: widthResponsive(1),
@@ -141,6 +151,9 @@ const styleLocal = StyleSheet.create({
   },
   containerList: {
     paddingVertical: widthResponsive(1),
+  },
+  iconBox: {
+    padding: widthResponsive(0.3),
   },
 });
 export default TransactionDetail;

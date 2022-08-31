@@ -19,7 +19,7 @@ export const register = createAsyncThunk('auth/register', async request => {
   const results = {};
   try {
     const send = qs.stringify(request);
-    const {data} = await http().post('/auth/register', send);
+    const {data} = await http().post('auth/register', send);
     results.successMsg = data.message;
     return results;
   } catch (error) {
@@ -55,7 +55,7 @@ export const getLinkForgetPassword = createAsyncThunk(
     const results = {};
     try {
       const send = qs.stringify(request);
-      const {data} = await http().patch('/auth/forgetPasswordLink', send);
+      const {data} = await http().patch('auth/forgetPasswordLink', send);
       results.data = `${backendUrl}/` + data.result.split(`${backendUrl}`)[1];
       results.successMsg = data.message;
       return results;
@@ -72,7 +72,7 @@ export const createPin = createAsyncThunk('user/createPin', async request => {
     const token = getToken();
     if (token) {
       const send = qs.stringify(request);
-      const {data} = await http().patch('/auth/createPin', send);
+      const {data} = await http().patch('auth/createPin', send);
       results.data = data.result[0];
       results.successMsg = data.message;
       return results;

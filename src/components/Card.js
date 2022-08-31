@@ -9,22 +9,23 @@ import {
 } from '../styles/constant';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export const UserCardHeader = ({image, subtitle, onPress}) => {
+export const UserCardHeader = ({image, subtitle, onPress, icon}) => {
   return (
     <>
       <View style={styles.userCardHeader}>
         <View style={styles.userCardRow}>
           <View style={style.rowWrapper}>
-            <Image
-              source={
-                image
-                //     {
-                //     uri: {image},
-                //     // uri: 'https://images.unsplash.com/photo-1661395122138-6a5ad27e37a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-                //   }
-              }
-              style={styles.imgCardUser}
-            />
+            {icon ?? (
+              <Image
+                source={
+                  image
+                  //     {
+                  //     uri: {image},
+                  //   }
+                }
+                style={styles.imgCardUser}
+              />
+            )}
             <View style={styles.userCardText}>
               <Text style={style.textTitle}>Balance</Text>
               <Text
@@ -75,8 +76,13 @@ export const UserCardContent = ({image, name, type, amount, icon}) => {
               <Text style={style.subtitleContent}>{type}</Text>
             </View>
           </View>
-          <View>
-            <Text style={style.textGreen}>{amount}</Text>
+          <View style={style.amountTextStyle}>
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={style.textGreen}>
+              {amount}
+            </Text>
           </View>
         </View>
       </View>
@@ -149,6 +155,40 @@ export const UserCardContent3 = ({image, name, type, amount, icon}) => {
           </View>
           <View>
             <Text style={style.textGreen}>{amount}</Text>
+          </View>
+        </View>
+      </View>
+    </>
+  );
+};
+export const UserCardContent4 = ({image, name, type, amount, icon}) => {
+  return (
+    <>
+      <View style={style.userCardContent}>
+        <View style={style.userCardRow2}>
+          <View style={style.rowWrapper2}>
+            {icon ?? (
+              <Image
+                source={
+                  image
+                  //     {
+                  //     uri: {image},
+                  //   }
+                }
+                style={styles.imgCardUser}
+              />
+            )}
+            <View style={style.userCardText2}>
+              <View style={style.marginBottomStyle}>
+                <Text
+                  ellipsizeMode="tail"
+                  numberOfLines={1}
+                  style={style.subtitleContent}>
+                  {name}
+                </Text>
+              </View>
+              <Text style={style.titleContent}>{type}</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -251,17 +291,17 @@ const style = StyleSheet.create({
   },
   userCardRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     paddingVertical: widthResponsive(1),
-    paddingHorizontal: widthResponsive(1),
   },
   userCardRow2: {
+    width: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: widthResponsive(0.5),
-    paddingHorizontal: widthResponsive(1),
+    marginLeft: widthResponsive(0.5),
   },
   userCardContent: {
     backgroundColor: 'white',
@@ -275,6 +315,12 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   userCardText: {
+    paddingVertical: widthResponsive(1),
+    width: widthResponsive(20) - widthResponsive(5) - widthResponsive(7),
+    flexDirection: 'column',
+    marginLeft: widthResponsive(1),
+  },
+  userCardText2: {
     paddingVertical: widthResponsive(1),
     width: widthResponsive(20) - widthResponsive(5) - widthResponsive(5),
     flexDirection: 'column',
@@ -354,5 +400,9 @@ const style = StyleSheet.create({
   },
   marginContent: {
     flex: 1,
+  },
+  amountTextStyle: {
+    width: widthResponsive(7),
+    alignItems: 'flex-end',
   },
 });

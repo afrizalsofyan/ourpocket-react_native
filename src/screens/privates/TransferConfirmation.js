@@ -4,7 +4,7 @@ import {CardTransaction} from '../../components/Card';
 import styles from '../../styles/global';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import Button, {ButtonTransction} from '../../components/Button';
-import {widthResponsive} from '../../styles/constant';
+import {convertMoney, widthResponsive} from '../../styles/constant';
 
 export const TransferContent = ({
   navigation,
@@ -18,18 +18,21 @@ export const TransferContent = ({
     <>
       <View style={[styles.flexDirectionColumn, styles.rootFlex1]}>
         <View style={[styles.rootFlex1, styles.flexDirectionRow]}>
-          <CardTransaction title={'Amount'} subtitle={'Rp. 200.000.000,00'} />
+          <CardTransaction
+            title={'Amount'}
+            subtitle={`Rp. ${convertMoney(data.amount).split('IDR')[1]}`}
+          />
           <CardTransaction
             title={'Balance Left'}
-            subtitle={'Rp. 1.000.000.000,00'}
+            subtitle={`Rp. ${data.balanceLeft}`}
           />
         </View>
         <View style={[styles.rootFlex1, styles.flexDirectionRow]}>
-          <CardTransaction title={'Date'} subtitle={'May 11, 2020'} />
-          <CardTransaction title={'Time'} subtitle={'12.20'} />
+          <CardTransaction title={'Date'} subtitle={data.date_transaction} />
+          <CardTransaction title={'Time'} subtitle={data.time_transaction} />
         </View>
         <View style={[styles.rootFlex1, styles.flexDirectionRow]}>
-          <CardTransaction title={'Notes'} subtitle={'For buying some socks'} />
+          <CardTransaction title={'Notes'} subtitle={data.notes} />
         </View>
       </View>
       {child ?? null}
@@ -49,30 +52,32 @@ export const TransferContent = ({
 };
 
 const TransferConfirmation = ({route, navigation}) => {
-  const data = route.params.data;
+  const data = route.params.sendData;
   console.log(data);
   const date = new Date();
-  const year = date.getFullYear().toLocaleString();
+  const year = date.getFullYear();
   const month = date.getMonth().toLocaleString();
   const time = `${date.getHours().toLocaleString()}.${date
     .getMinutes()
     .toLocaleString()}`;
   const getDate = date.getDate().toLocaleString();
   const months = [
-    'January',
-    'February',
-    'March',
-    'April',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
     'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
   const fullDate = `${months[Number(month) + 1]} ${getDate}, ${year}`;
+  data.date_transaction = fullDate;
+  data.time_transaction = time;
   const data2 = {
     amount: 100000,
     balance: 900000,
@@ -87,7 +92,7 @@ const TransferConfirmation = ({route, navigation}) => {
       child={
         <ScrollView style={style.marginVerticalCard}>
           <TransferContent
-            data={data2}
+            data={data}
             navigation={navigation}
             targetScreen={'Pin Confirmation'}
             btnText={'Continue'}

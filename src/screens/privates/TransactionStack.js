@@ -1,6 +1,6 @@
 import {View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React from 'react';
+import React, { useState } from 'react';
 import Transfer from './Transfer';
 import Transaction from './Transaction';
 
@@ -19,10 +19,13 @@ import PinConfirmation from './PinConfirmation';
 import TransferSuccess from './TransferSuccess';
 import TransferFailed from './TransferFailed';
 import TopUp from './TopUp';
+import {useSelector} from 'react-redux';
+import ModalTopup from '../../components/Modal';
 
 const Stack = createNativeStackNavigator();
 
 const TransactionStack = () => {
+  const otherUser = useSelector(state => state.users.result);
   return (
     <Stack.Navigator initialRouteName={'Transaction Type'}>
       <Stack.Screen
@@ -83,31 +86,7 @@ const TransactionStack = () => {
         component={TopUp}
         options={{
           headerTransparent: true,
-          header: ({navigation, options, route, back}) => {
-            const title = getHeaderTitle(options, route.name);
-            return (
-              <HeaderCustom2
-                navigation={navigation}
-                title={title}
-                back={back}
-                child={
-                  <UserCardContent3
-                    icon={
-                      <TouchableOpacity style={style.iconBoxHeader}>
-                        <Icon
-                          name="ios-add"
-                          size={widthResponsive(2)}
-                          color={COLOR_PRIMARY}
-                        />
-                      </TouchableOpacity>
-                    }
-                    name="Virtual Account Number"
-                    type={'2389 0813234343523'}
-                  />
-                }
-              />
-            );
-          },
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -125,9 +104,15 @@ const TransactionStack = () => {
                 back={back}
                 child={
                   <UserCardContent2
-                    image={{uri: data.img}}
-                    name={data.name}
-                    type={'082280978963'}
+                    image={{uri: otherUser.photo_url}}
+                    icon={
+                      !otherUser.photo_url ? (
+                        <Icon name="ios-person" size={widthResponsive(3)} />
+                      ) : null
+                    }
+                    name={otherUser.username ?? 'user name'}
+                    // amount={item.}
+                    type={otherUser.phone_number ?? '-'}
                   />
                 }
               />
@@ -142,7 +127,8 @@ const TransactionStack = () => {
           headerTransparent: true,
           header: ({navigation, options, route, back}) => {
             const title = getHeaderTitle(options, route.name).split(' ')[1];
-            const data = route.params.data;
+            const data = route.params.sendData;
+            console.log(data);
             return (
               <HeaderCustom2
                 navigation={navigation}
@@ -150,9 +136,15 @@ const TransactionStack = () => {
                 back={back}
                 child={
                   <UserCardContent2
-                    image={{uri: data.img}}
-                    name={data.name}
-                    type={'082280978963'}
+                    image={{uri: otherUser.photo_url}}
+                    icon={
+                      !otherUser.photo_url ? (
+                        <Icon name="ios-person" size={widthResponsive(3)} />
+                      ) : null
+                    }
+                    name={otherUser.username ?? 'user name'}
+                    // amount={item.}
+                    type={otherUser.phone_number ?? '-'}
                   />
                 }
               />

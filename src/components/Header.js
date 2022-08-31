@@ -42,7 +42,7 @@ export const HeaderCustom2 = ({
     <View
       style={[
         style.headerWrapper2,
-        child ? style.heightHeader3 : style.heightHeader1,
+        child ? style.heightHeader2 : style.heightHeader1,
       ]}>
       {centerHeader ? (
         <View style={style.headerCenter}>

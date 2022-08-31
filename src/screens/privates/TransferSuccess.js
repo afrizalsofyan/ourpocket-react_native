@@ -5,8 +5,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {COLOR_5, widthResponsive} from '../../styles/constant';
 import {TransferContent} from './TransferConfirmation';
 import {UserCardContent2} from '../../components/Card';
+import {useSelector} from 'react-redux';
 const TransferSuccess = ({route, navigation}) => {
   const data = route.params.data;
+  const profile = useSelector(state => state.users.profile);
+  const otherUser = useSelector(state => state.users.result);
+  console.log(data);
   return (
     <DashboardLayout
       child={
@@ -25,6 +29,7 @@ const TransferSuccess = ({route, navigation}) => {
           </View>
           <View>
             <TransferContent
+              data={data}
               navigation={navigation}
               // targetScreen={'Dashboard'}
               btnText={'Back to Home'}
@@ -40,9 +45,18 @@ const TransferSuccess = ({route, navigation}) => {
                     </View>
                     <View>
                       <UserCardContent2
-                        name={data.name}
-                        type={'0819283748332'}
-                        image={{uri: data.img}}
+                        name={profile.username}
+                        type={
+                          profile.phone_number[0]
+                            ? profile.phone_number[0]
+                            : '-'
+                        }
+                        image={{uri: profile.photo_url}}
+                        icon={
+                          !profile.photo_url ? (
+                            <Icon name="ios-person" size={widthResponsive(3)} />
+                          ) : null
+                        }
                       />
                     </View>
                   </View>
@@ -52,9 +66,18 @@ const TransferSuccess = ({route, navigation}) => {
                     </View>
                     <View>
                       <UserCardContent2
-                        name={data.name}
-                        type={'0819283748332'}
-                        image={{uri: data.img}}
+                        name={otherUser.username ?? 'user recipient'}
+                        type={
+                          otherUser.phone_number
+                            ? otherUser.phone_number[0]
+                            : '-'
+                        }
+                        image={{uri: otherUser.photo_url}}
+                        icon={
+                          !otherUser.photo_url ? (
+                            <Icon name="ios-person" size={widthResponsive(3)} />
+                          ) : null
+                        }
                       />
                     </View>
                   </View>
