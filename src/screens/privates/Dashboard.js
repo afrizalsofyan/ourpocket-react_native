@@ -7,7 +7,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
-import {UserCardContent, UserCardHeader} from '../../components/Card';
+import {
+  ErrorCard,
+  SuccessCard,
+  UserCardContent,
+  UserCardHeader,
+} from '../../components/Card';
 import {
   COLOR_SECONDARY,
   convertMoney,
@@ -26,10 +31,19 @@ const Dashboard = ({navigation}) => {
   const dispatch = useDispatch();
   const transaction = useSelector(state => state.transaction.results);
   const profile = useSelector(state => state.users.profile);
+  const successMsgTransaction = useSelector(
+    state => state.transaction.successMsg,
+  );
+  const errorMsgTransaction = useSelector(state => state.transaction.errorMsg);
+  const [showMsg, setShowMsg] = React.useState(false);
   React.useEffect(() => {
     if (token) {
       dispatch(getSomeTransaction({token: token}));
       // navigation.replace('Login');
+      setShowMsg(true);
+      setTimeout(() => {
+        setShowMsg(false);
+      }, 600);
     }
   }, [dispatch, token, navigation]);
   return (
@@ -39,11 +53,21 @@ const Dashboard = ({navigation}) => {
           <StatusBar translucent={false} backgroundColor={COLOR_SECONDARY} />
           <UserCardHeader
             image={{
-              uri: profile.photo_url,
+              uri: profile?.photo_url,
             }}
-            subtitle={`Rp. ${convertMoney(profile.balance).split('IDR')[1]}`}
+            subtitle={`Rp. ${convertMoney(profile?.balance).split('IDR')[1]}`}
             onPress={() => console.log('notif push')}
           />
+          {showMsg ? (
+            <>
+              {successMsgTransaction ? (
+                <SuccessCard text={successMsgTransaction} />
+              ) : null}
+              {errorMsgTransaction ? (
+                <ErrorCard text={errorMsgTransaction} />
+              ) : null}
+            </>
+          ) : null}
           <View style={styleLocal.buttonWrapper}>
             <ButtonTransction icon={'ios-arrow-up'} buttonText="Transfer" />
             <ButtonTransction icon={'ios-add'} buttonText="TopUp" />

@@ -6,6 +6,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import React from 'react';
 import styles from '../../styles/global';
@@ -18,120 +19,137 @@ import {
 } from '../../styles/constant';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CardButton} from '../../components/Button';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {logout} from '../../redux/reducers/auth';
+import { getProfile } from '../../redux/asyncActions/user';
 
 const Profile = ({route, navigation}) => {
   const dispatch = useDispatch();
+  const profile = useSelector(state => state.users.profile);
   const image =
     'https://images.unsplash.com/photo-1661395122138-6a5ad27e37a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80';
   const [active, setActive] = React.useState(false);
+  const token = useSelector(state => state.auth.token);
+  React.useEffect(() => {
+    dispatch(getProfile({token: token}));
+  }, [dispatch, navigation, token]);
   return (
     <DashboardLayout
       child={
-        <ScrollView style={[styles.rootFlex1, style.root]}>
-          <View style={style.wrapper}>
-            <View>
-              {image ? (
-                <Image
-                  source={{
-                    uri: image,
-                  }}
-                  style={style.imgWrapper}
-                />
-              ) : (
-                <View style={style.iconWrapperNull}>
+        <>
+          {profile ? (
+            <ScrollView style={[styles.rootFlex1, style.root]}>
+              <View style={style.wrapper}>
+                <View>
+                  {profile.photo_url ? (
+                    <Image
+                      source={{
+                        uri: profile.photo_url,
+                      }}
+                      style={style.imgWrapper}
+                    />
+                  ) : (
+                    <View style={style.iconWrapperNull}>
+                      <Icon
+                        name="ios-person-outline"
+                        size={widthResponsive(5)}
+                        color={COLOR_5}
+                      />
+                    </View>
+                  )}
+                </View>
+                <TouchableOpacity
+                  style={[styles.flexDirectionRow, style.editButton]}>
                   <Icon
-                    name="ios-person-outline"
-                    size={widthResponsive(5)}
-                    color={COLOR_5}
+                    name="ios-pencil-sharp"
+                    size={widthResponsive(1)}
+                    color={COLOR_GRAY}
+                  />
+                  <Text>Edit</Text>
+                </TouchableOpacity>
+                <View>
+                  <Text style={style.nameStyle}>{profile.username}</Text>
+                  <Text style={style.phoneStyle}>
+                    {profile.phone_number ? profile.phone_number : '-'}
+                  </Text>
+                </View>
+                <View style={style.btnContentPosition}>
+                  <CardButton
+                    btnText={'Personal Information'}
+                    child={
+                      <Icon
+                        name="ios-arrow-forward"
+                        size={widthResponsive(1.5)}
+                        color={COLOR_5}
+                      />
+                    }
+                    onPress={() => navigation.navigate('Personal Information')}
+                  />
+                  <CardButton
+                    btnText={'Change Password'}
+                    child={
+                      <Icon
+                        name="ios-arrow-forward"
+                        size={widthResponsive(1.5)}
+                        color={COLOR_5}
+                      />
+                    }
+                    onPress={() => navigation.navigate('Change Password')}
+                  />
+                  <CardButton
+                    btnText={'Change Pin'}
+                    child={
+                      <Icon
+                        name="ios-arrow-forward"
+                        size={widthResponsive(1.5)}
+                        color={COLOR_5}
+                      />
+                    }
+                    onPress={() => navigation.navigate('Change Pin')}
+                  />
+                  <CardButton
+                    btnText={'Notification'}
+                    child={
+                      <TouchableOpacity
+                        style={[
+                          style.toggleButton,
+                          active ? style.bgInactive : style.bgActive,
+                        ]}
+                        onPress={() => setActive(!active)}>
+                        <View
+                          style={
+                            active
+                              ? style.toggleContentActive
+                              : style.toggleContentInactive
+                          }
+                        />
+                        <View
+                          style={
+                            active
+                              ? style.toggleContentInactive
+                              : style.toggleContentActive
+                          }
+                        />
+                      </TouchableOpacity>
+                    }
+                    onPress={() => navigation.navigate('Notification')}
+                  />
+                  <CardButton
+                    btnText={'Logout'}
+                    onPress={() => {
+                      dispatch(logout());
+                      navigation.replace('Login');
+                    }}
                   />
                 </View>
-              )}
+              </View>
+            </ScrollView>
+          ) : (
+            <View style={[style.container, style.horizontal]}>
+              <ActivityIndicator size={'large'} color={COLOR_PRIMARY} />
             </View>
-            <TouchableOpacity style={styles.flexDirectionRow}>
-              <Icon
-                name="ios-pencil-sharp"
-                size={widthResponsive(1)}
-                color={COLOR_GRAY}
-              />
-              <Text>Edit</Text>
-            </TouchableOpacity>
-            <View>
-              <Text style={style.nameStyle}>Jessica Liu</Text>
-              <Text style={style.phoneStyle}>081982736453</Text>
-            </View>
-            <View style={style.btnContentPosition}>
-              <CardButton
-                btnText={'Personal Information'}
-                child={
-                  <Icon
-                    name="ios-arrow-forward"
-                    size={widthResponsive(1.5)}
-                    color={COLOR_5}
-                  />
-                }
-                onPress={() => navigation.navigate('Personal Information')}
-              />
-              <CardButton
-                btnText={'Change Password'}
-                child={
-                  <Icon
-                    name="ios-arrow-forward"
-                    size={widthResponsive(1.5)}
-                    color={COLOR_5}
-                  />
-                }
-                onPress={() => navigation.navigate('Change Password')}
-              />
-              <CardButton
-                btnText={'Change Pin'}
-                child={
-                  <Icon
-                    name="ios-arrow-forward"
-                    size={widthResponsive(1.5)}
-                    color={COLOR_5}
-                  />
-                }
-                onPress={() => navigation.navigate('Change Pin')}
-              />
-              <CardButton
-                btnText={'Notification'}
-                child={
-                  <TouchableOpacity
-                    style={[
-                      style.toggleButton,
-                      active ? style.bgInactive : style.bgActive,
-                    ]}
-                    onPress={() => setActive(!active)}>
-                    <View
-                      style={
-                        active
-                          ? style.toggleContentActive
-                          : style.toggleContentInactive
-                      }
-                    />
-                    <View
-                      style={
-                        active
-                          ? style.toggleContentInactive
-                          : style.toggleContentActive
-                      }
-                    />
-                  </TouchableOpacity>
-                }
-                onPress={() => navigation.navigate('Notification')}
-              />
-              <CardButton
-                btnText={'Logout'}
-                onPress={() => {
-                  dispatch(logout());
-                  navigation.replace('Login');
-                }}
-              />
-            </View>
-          </View>
-        </ScrollView>
+          )}
+        </>
       }
     />
   );
@@ -204,6 +222,17 @@ const style = StyleSheet.create({
   },
   bgInactive: {
     backgroundColor: COLOR_PRIMARY,
+  },
+  editButton: {
+    marginTop: widthResponsive(0.5),
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });
 

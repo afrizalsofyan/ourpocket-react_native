@@ -10,8 +10,10 @@ import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import {COLOR_5, widthResponsive} from '../../styles/constant';
 import {CardTransaction} from '../../components/Card';
 import styles from '../../styles/global';
+import {useSelector} from 'react-redux';
 
 const PersonalInformation = ({navigation}) => {
+  const profile = useSelector(state => state.users.profile);
   const data = {id: 1, phoneNumber: '081920838374'};
   return (
     <DashboardLayout
@@ -27,15 +29,21 @@ const PersonalInformation = ({navigation}) => {
             </View>
             <View style={styles.flexDirectionColumn}>
               <View style={[styles.flexDirectionRow]}>
-                <CardTransaction title={'First Name'} subtitle={'Jessica'} />
+                <CardTransaction
+                  title={'First Name'}
+                  subtitle={profile.first_name}
+                />
               </View>
               <View style={[styles.flexDirectionRow]}>
-                <CardTransaction title={'Last Name'} subtitle={'Liu'} />
+                <CardTransaction
+                  title={'Last Name'}
+                  subtitle={profile.last_name}
+                />
               </View>
               <View style={[styles.flexDirectionRow]}>
                 <CardTransaction
                   title={'Verified E-mail'}
-                  subtitle={'jessicaliu@mail.com'}
+                  subtitle={profile.email}
                 />
               </View>
               <View
@@ -50,7 +58,7 @@ const PersonalInformation = ({navigation}) => {
                   </View>
                   <View style={style.paddingTextCard}>
                     <Text style={style.subtitleCard}>
-                      {data.phoneNumber ?? '-'}
+                      {profile.phone_number[0] ?? '-'}
                     </Text>
                   </View>
                 </View>

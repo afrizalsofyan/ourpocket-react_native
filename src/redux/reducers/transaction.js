@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import {
   getSomeTransaction,
   historyTransaction,
+  topupBalance,
   transferTransaction,
 } from '../asyncActions/transaction';
 
@@ -24,7 +25,7 @@ const transaction = createSlice({
       // state.resultsNextPage = [...action.payload];
       state.results = [...state.results, ...action.payload];
       // state.results = state.results.push(action.payload)
-      console.log(state.results)
+      console.log(state.results);
     },
     onRefreshPage: state => {
       state.resultsNextPage = [];
@@ -60,9 +61,24 @@ const transaction = createSlice({
       state.successMsg = action.payload.message;
       state.errorMsg = action.payload.errorMsg;
     });
+    build.addCase(topupBalance.pending, state => {
+      state.result = [];
+      state.errorMsg = null;
+      state.successMsg = null;
+    });
+    build.addCase(topupBalance.fulfilled, (state, action) => {
+      state.result = action.payload.result;
+      state.successMsg = action.payload.message;
+      state.errorMsg = action.payload.errorMsg;
+    });
   },
 });
 
-export {getSomeTransaction, transferTransaction, historyTransaction};
+export {
+  getSomeTransaction,
+  transferTransaction,
+  historyTransaction,
+  topupBalance,
+};
 export const {onNextPage, onRefreshPage} = transaction.actions;
 export default transaction.reducer;

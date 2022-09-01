@@ -21,6 +21,9 @@ import {HeaderCustom2} from '../../components/Header';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import {useDispatch, useSelector} from 'react-redux';
+import {topupBalance} from '../../redux/asyncActions/transaction';
+import {getProfile} from '../../redux/asyncActions/user';
 
 const content = [
   {keyContent: 1, content: 'Go to the nearest ATM or you can use E-Banking.'},
@@ -42,12 +45,24 @@ const content = [
 const topupSchema = Yup.object().shape({
   amount: Yup.number()
     .typeError('You must input with only number.')
-    .min(10000, 'Minimum topup is Rp. 10.000')
+    .min(50000, 'Minimum topup is Rp. 50.000')
     .required(),
 });
 
-const TopUp = () => {
+const TopUp = ({navigation}) => {
+  const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.token);
   const [modalVisible, setModalVisible] = React.useState(false);
+  const onSubmitTopup = val => {
+    val.amount = parseInt(val.amount, 10);
+    val.token = token;
+    dispatch(topupBalance(val));
+    setTimeout(() => {
+      setModalVisible(!modalVisible);
+      navigation.navigate('Dashboard');
+      dispatch(getProfile({token: token}));
+    }, 500);
+  };
   return (
     <>
       <HeaderCustom2
@@ -74,12 +89,11 @@ const TopUp = () => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
         <Formik
           initialValues={{amount: '', type_id: 16}}
-          onSubmit={val => console.log(val)}
+          onSubmit={onSubmitTopup}
           validationSchema={topupSchema}>
           {({errors, isValid, handleChange, handleSubmit, values}) => (
             <View style={style.centeredView}>

@@ -3,8 +3,8 @@ import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native';
 import {COLOR_PRIMARY} from '../../styles/constant';
 import styles from '../../styles/global';
 import {useDispatch, useSelector} from 'react-redux';
-import { getProfile } from '../../redux/asyncActions/user';
-import { getSomeTransaction } from '../../redux/asyncActions/transaction';
+import {getProfile} from '../../redux/asyncActions/user';
+import {getSomeTransaction} from '../../redux/asyncActions/transaction';
 
 export const DashboardLayout = ({child}) => {
   const dispatch = useDispatch();

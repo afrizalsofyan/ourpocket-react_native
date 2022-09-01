@@ -4,6 +4,7 @@ import {combineReducers} from '@reduxjs/toolkit';
 import auth from './auth';
 import transaction from './transaction';
 import users from './user';
+import profile from './profile';
 
 const authPersistConfig = {
   key: 'auth',
@@ -16,6 +17,7 @@ const reducer = combineReducers({
   auth: persistedReducer,
   transaction,
   users,
+  profile,
 });
 
 export default reducer;

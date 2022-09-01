@@ -12,7 +12,9 @@ export const historyTransaction = createAsyncThunk(
           request.keywords ?? ''
         }&searchBy=${request.searchBy ?? 'recipient'}&sortBy=${
           request.sortBy ?? 'time_transaction'
-        }&sortType=${request.sortType ?? '1'}&page=${request.page ?? '1'}&limit=${request.limit ?? 5}`,
+        }&sortType=${request.sortType ?? '1'}&page=${
+          request.page ?? '1'
+        }&limit=${request.limit ?? 5}`,
       );
       return data;
     } catch (error) {
@@ -38,14 +40,26 @@ export const getSomeTransaction = createAsyncThunk(
   },
 );
 
-// export const topupBalance = createAsyncThunk('topup/midtrans', async request => {
-//   const result = {};
-//   try {
-//     const {data}
-//   } catch (error) {
-
-//   }
-// })
+export const topupBalance = createAsyncThunk(
+  'transaction/topup',
+  async request => {
+    const result = {};
+    try {
+      const send = qs.stringify({
+        amount: request.amount,
+        type_id: request.type_id,
+      });
+      const {data} = await http(request.token).patch(
+        'transactions/topup',
+        send,
+      );
+      return data;
+    } catch (error) {
+      result.errorMsg = error.response.data.message;
+      return result;
+    }
+  },
+);
 
 export const transferTransaction = createAsyncThunk(
   'transaction/transfer',
