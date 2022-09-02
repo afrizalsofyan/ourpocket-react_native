@@ -58,27 +58,7 @@ const TransactionStack = () => {
         component={Transfer}
         options={{
           headerTransparent: true,
-          header: ({navigation, options, route, back}) => {
-            const title = getHeaderTitle(options, route.name);
-            return (
-              <HeaderCustom
-                navigation={navigation}
-                title={title}
-                back={back}
-                child={
-                  <View style={style.inputWrapper}>
-                    <View style={style.iconBox}>
-                      <Icon name="ios-search" size={widthResponsive(1)} />
-                    </View>
-                    <TextInput
-                      placeholder="Search reciever here"
-                      onChangeText={val => console.log(val)}
-                    />
-                  </View>
-                }
-              />
-            );
-          },
+          headerShown: false,
         }}
       />
       <Stack.Screen

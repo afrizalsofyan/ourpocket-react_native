@@ -5,12 +5,21 @@ import HeaderAuthContent from '../../components/HeaderAuthContent';
 import ReactNativePinView from 'react-native-pin-view';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {COLOR_GRAY} from '../../styles/constant';
+import {useDispatch, useSelector} from 'react-redux';
+import {updatePin} from '../../redux/asyncActions/profile';
+import {getUpdate} from '../../redux/reducers/profile';
+import {ErrorCard} from '../../components/Card';
 
-const NewPin = ({navigation}) => {
+const NewPin = ({route, navigation}) => {
+  const dispatch = useDispatch();
   const pinView = React.useRef();
   const [showRemoveButton, setShowRemoveButton] = React.useState(false);
   const [enteredPin, setEnteredPin] = React.useState('');
   const [showCompletedButton, setShowCompletedButton] = React.useState(false);
+  const pinUser = parseInt(route.params.enteredPin, 10);
+  const errMsg = useSelector(state => state.profile.errorMsg);
+  const token = useSelector(state => state.auth.token);
+  const [err, setErr] = React.useState();
   React.useEffect(() => {
     if (enteredPin.length > 0) {
       setShowRemoveButton(true);
@@ -22,7 +31,12 @@ const NewPin = ({navigation}) => {
     } else {
       setShowCompletedButton(false);
     }
-  }, [enteredPin]);
+    if (errMsg) {
+      setTimeout(() => {
+        setErr();
+      }, 2000);
+    }
+  }, [enteredPin, errMsg]);
   return (
     <>
       <DashboardLayout
@@ -36,6 +50,11 @@ const NewPin = ({navigation}) => {
                   }
                 />
               </View>
+              {err ? (
+                <View>
+                  <ErrorCard text={err} />
+                </View>
+              ) : null}
               <View style={style.wrapper}>
                 <ReactNativePinView
                   inputSize={40}
@@ -55,7 +74,23 @@ const NewPin = ({navigation}) => {
                     if (key === 'custom_right') {
                       Alert.alert('Success', 'Your pin has been updated.', [
                         {
-                          onPress: () => navigation.popToTop(),
+                          onPress: () => {
+                            dispatch(
+                              updatePin({
+                                token: token,
+                                newPin: enteredPin,
+                                currentPin: pinUser,
+                              }),
+                            );
+                            if (errMsg) {
+                              setErr(errMsg);
+                            } else {
+                              setTimeout(() => {
+                                dispatch(getUpdate());
+                                navigation.popToTop();
+                              }, 1000);
+                            }
+                          },
                         },
                       ]);
                     }

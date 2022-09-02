@@ -2,54 +2,135 @@ import {View, Text, ScrollView, StyleSheet} from 'react-native';
 import React from 'react';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import styles from '../../styles/global';
-import {CardTransaction} from '../../components/Card';
+import {CardTransaction, ErrorCard} from '../../components/Card';
 import {COLOR_5, widthResponsive} from '../../styles/constant';
 import InputField from '../../components/InputField';
 import Button from '../../components/Button';
+import {useDispatch, useSelector} from 'react-redux';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
+import {updatePassword} from '../../redux/asyncActions/profile';
+import {getUpdate} from '../../redux/reducers/profile';
+
+const passwordSchema = Yup.object().shape({
+  currentPassword: Yup.string()
+    .min(8, 'current password at least 8 characters')
+    .required('current password is required'),
+  newPassword: Yup.string()
+    .min(8, 'new password at least 8 characters')
+    .required('new password is required'),
+  repeatPassword: Yup.string()
+    .min(8, 'confirm password at least 8 characters')
+    .required('confirma password is required'),
+});
 
 const ChangePassword = ({route, navigation}) => {
+  const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.token);
+  const errorMsg = useSelector(state => state.profile.errorMsg);
+  const [err, setErr] = React.useState();
+  const onUpdatePassword = val => {
+    console.log(val.newPassword !== val.currentPassword);
+    if (val.newPassword != val.repeatPassword) {
+      setErr('Confirmation password is invalid');
+    } else {
+      setErr();
+      val.token = token;
+      dispatch(updatePassword(val));
+      if (errorMsg) {
+        setErr(errorMsg);
+      } else {
+        setTimeout(() => {
+          dispatch(getUpdate());
+          navigation.popToTop();
+        }, 1000);
+      }
+    }
+  };
+  React.useEffect(() => {
+    if (errorMsg) {
+      setTimeout(() => {
+        setErr();
+      }, 2000);
+    }
+  }, [errorMsg, dispatch]);
   return (
     <DashboardLayout
       child={
         <ScrollView>
-          <View style={[styles.rootFlex1, style.root]}>
-            <View style={style.fieldWrapper}>
-              <Text style={style.textHeaderStyle}>
-                You must enter your current password and then type your new
-                password twice.
-              </Text>
-            </View>
-            <View style={[style.inputWrapper, styles.rootFlex1]}>
-              <View style={style.fieldWrapper}>
-                <InputField
-                  icon={'ios-lock-closed-outline'}
-                  placeholder={'Enter your password'}
-                  secure={true}
-                />
+          <Formik
+            initialValues={{
+              currentPassword: '',
+              newPassword: '',
+              repeatPassword: '',
+            }}
+            validationSchema={passwordSchema}
+            onSubmit={onUpdatePassword}>
+            {({errors, values, handleChange, handleSubmit, isValid}) => (
+              <View style={[styles.rootFlex1, style.root]}>
+                <View style={style.fieldWrapper}>
+                  <Text style={style.textHeaderStyle}>
+                    You must enter your current password and then type your new
+                    password twice.
+                  </Text>
+                </View>
+                {err ? (
+                  <View style={style.fieldWrapper}>
+                    <ErrorCard text={err} />
+                  </View>
+                ) : null}
+                <View style={[style.inputWrapper, styles.rootFlex1]}>
+                  <View style={style.fieldWrapper}>
+                    <InputField
+                      icon={'ios-lock-closed-outline'}
+                      placeholder={'Enter your current password'}
+                      secure={true}
+                      value={values.currentPassword}
+                      onChange={handleChange('currentPassword')}
+                    />
+                    {errors.currentPassword ? (
+                      <Text style={style.errorStyle}>
+                        {errors.currentPassword}
+                      </Text>
+                    ) : null}
+                  </View>
+                  <View style={style.fieldWrapper}>
+                    <InputField
+                      icon={'ios-lock-closed-outline'}
+                      placeholder={'Enter your new password'}
+                      secure={true}
+                      value={values.newPassword}
+                      onChange={handleChange('newPassword')}
+                    />
+                    {errors.newPassword ? (
+                      <Text style={style.errorStyle}>{errors.newPassword}</Text>
+                    ) : null}
+                  </View>
+                  <View style={style.fieldWrapper}>
+                    <InputField
+                      icon={'ios-lock-closed-outline'}
+                      placeholder={'Enter your confirm password'}
+                      secure={true}
+                      value={values.repeatPassword}
+                      onChange={handleChange('repeatPassword')}
+                    />
+                    {errors.repeatPassword ? (
+                      <Text style={style.errorStyle}>
+                        {errors.repeatPassword}
+                      </Text>
+                    ) : null}
+                  </View>
+                </View>
+                <View style={style.wrapperButton}>
+                  <Button
+                    buttonText={'Confirm'}
+                    disable={!isValid}
+                    onPress={handleSubmit}
+                  />
+                </View>
               </View>
-              <View style={style.fieldWrapper}>
-                <InputField
-                  icon={'ios-lock-closed-outline'}
-                  placeholder={'Enter your password'}
-                  secure={true}
-                />
-              </View>
-              <View style={style.fieldWrapper}>
-                <InputField
-                  icon={'ios-lock-closed-outline'}
-                  placeholder={'Enter your password'}
-                  secure={true}
-                />
-              </View>
-            </View>
-            <View style={style.wrapperButton}>
-              <Button
-                buttonText={'Confirm'}
-                disable={false}
-                onPress={() => navigation.popToTop()}
-              />
-            </View>
-          </View>
+            )}
+          </Formik>
         </ScrollView>
       }
     />
@@ -95,7 +176,7 @@ const style = StyleSheet.create({
     fontWeight: '500',
   },
   inputWrapper: {
-    marginVertical: widthResponsive(2),
+    // marginVertical: widthResponsive(2),
   },
   fieldWrapper: {
     marginTop: widthResponsive(1),
@@ -103,6 +184,10 @@ const style = StyleSheet.create({
   },
   wrapperButton: {
     marginTop: widthResponsive(3),
+  },
+  errorStyle: {
+    color: 'red',
+    marginTop: widthResponsive(0.5),
   },
 });
 

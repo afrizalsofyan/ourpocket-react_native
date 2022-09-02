@@ -1,5 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {addPhone, updatePhone} from '../asyncActions/profile';
+import {
+  addPhone,
+  updatePassword,
+  updatePhone,
+  updatePin,
+  updateProfile,
+} from '../asyncActions/profile';
 
 const initialState = {
   result: {},
@@ -10,7 +16,11 @@ const initialState = {
 const profile = createSlice({
   name: 'profile',
   initialState,
-  reducers: {},
+  reducers: {
+    getUpdate: (state, action) => {
+      return initialState;
+    },
+  },
   extraReducers: build => {
     build.addCase(addPhone.pending, state => {
       state.successMsg = null;
@@ -28,10 +38,38 @@ const profile = createSlice({
     build.addCase(updatePhone.fulfilled, (state, action) => {
       state.result = action.payload;
       state.errorMsg = action.payload.errorMsg;
-      state.successMsg = action.payload.successMsg;
+      state.successMsg = action.payload.message;
+    });
+    build.addCase(updatePassword.pending, state => {
+      state.successMsg = null;
+      state.errorMsg = null;
+    });
+    build.addCase(updatePassword.fulfilled, (state, action) => {
+      state.result = action.payload;
+      state.errorMsg = action.payload.errorMsg;
+      state.successMsg = action.payload.message;
+    });
+    build.addCase(updatePin.pending, state => {
+      state.successMsg = null;
+      state.errorMsg = null;
+    });
+    build.addCase(updatePin.fulfilled, (state, action) => {
+      state.result = action.payload;
+      state.errorMsg = action.payload.errorMsg;
+      state.successMsg = action.payload.message;
+    });
+    build.addCase(updateProfile.pending, state => {
+      state.successMsg = null;
+      state.errorMsg = null;
+    });
+    build.addCase(updateProfile.fulfilled, (state, action) => {
+      state.result = action.payload;
+      state.errorMsg = action.payload.errorMsg;
+      state.successMsg = action.payload.message;
     });
   },
 });
 
-export {addPhone, updatePhone};
+export {addPhone, updatePhone, updatePassword, updatePin};
+export const {getUpdate} = profile.actions;
 export default profile.reducer;

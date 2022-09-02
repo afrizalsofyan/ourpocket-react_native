@@ -7,6 +7,7 @@ const initialState = {
   errorMsg: null,
   result: {},
   profile: {},
+  infoData: {},
 };
 
 const users = createSlice({
@@ -20,6 +21,7 @@ const users = createSlice({
     });
     build.addCase(getAllUser.fulfilled, (state, action) => {
       state.results = action.payload.result;
+      state.infoData = action.payload.info;
       state.successMsg = action.payload.message;
       state.errorMsg = action.payload.errorMsg;
     });

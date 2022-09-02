@@ -10,9 +10,16 @@ import ChangePin from './ChangePin';
 import NewPin from './NewPin';
 import AddPhone from './AddPhone';
 import Notification from './Notification';
+import {useDispatch, useSelector} from 'react-redux';
+import {getProfile} from '../../redux/asyncActions/user';
 const Stack = createNativeStackNavigator();
 
 const ProfileStack = () => {
+  const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.token);
+  React.useEffect(() => {
+    dispatch(getProfile({token: token}));
+  }, [dispatch, token]);
   return (
     <Stack.Navigator initialRouteName="Pofile Stack">
       <Stack.Screen

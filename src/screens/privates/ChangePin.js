@@ -6,12 +6,14 @@ import {COLOR_GRAY} from '../../styles/constant';
 import Icon from 'react-native-vector-icons/Ionicons';
 import HeaderAuthContent from '../../components/HeaderAuthContent';
 import ReactNativePinView from 'react-native-pin-view';
+import {useSelector} from 'react-redux';
 
 const ChangePin = ({navigation}) => {
   const pinView = React.useRef();
   const [showRemoveButton, setShowRemoveButton] = React.useState(false);
   const [enteredPin, setEnteredPin] = React.useState('');
   const [showCompletedButton, setShowCompletedButton] = React.useState(false);
+  const currentPin = useSelector(state => state.users.profile.pin_number);
   React.useEffect(() => {
     if (enteredPin.length > 0) {
       setShowRemoveButton(true);
@@ -54,12 +56,13 @@ const ChangePin = ({navigation}) => {
                     pinView.current.clear();
                   }
                   if (key === 'custom_right') {
-                    if (Number(enteredPin) != dummyPin) {
+                    if (Number(enteredPin) != currentPin) {
                       Alert.alert('Failed!!!', 'Your pin is wrong.');
                     } else {
                       Alert.alert('Success', 'Pin is matched', [
                         {
-                          onPress: () => navigation.navigate('New Pin'),
+                          onPress: () =>
+                            navigation.navigate('New Pin', {enteredPin}),
                         },
                       ]);
                     }

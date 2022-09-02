@@ -5,7 +5,9 @@ export const getAllUser = createAsyncThunk('user/all', async request => {
   const result = {};
   try {
     const {data} = await http(request.token).get(
-      'user/allUser?search=&sortBy=first_name&page=1&limit=1000',
+      `user/allUser?search=${request.keywords ?? ''}&sortBy=${
+        request.sortBy ?? 'username'
+      }&page=${request.page ?? '1'}&limit=${request.limit ?? '1000'}`,
       // '/user/allUser?search=&sortBy=first_name&page=1&sortType&limit=1000',
     );
     return data;

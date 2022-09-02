@@ -7,6 +7,9 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  TextInput,
+  Modal,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import styles from '../../styles/global';
@@ -21,26 +24,102 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {CardButton} from '../../components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {logout} from '../../redux/reducers/auth';
-import { getProfile } from '../../redux/asyncActions/user';
+import {getProfile} from '../../redux/asyncActions/user';
+import {getUpdate} from '../../redux/reducers/profile';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
+import {updateProfile} from '../../redux/asyncActions/profile';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+
+const editProfileSchema = Yup.object().shape({
+  firstName: Yup.string().required(),
+  lastName: Yup.string().required(),
+});
 
 const Profile = ({route, navigation}) => {
   const dispatch = useDispatch();
   const profile = useSelector(state => state.users.profile);
-  const image =
-    'https://images.unsplash.com/photo-1661395122138-6a5ad27e37a8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80';
-  const [active, setActive] = React.useState(false);
+  const errorMsg = useSelector(state => state.profile.errorMsg);
   const token = useSelector(state => state.auth.token);
+  const profileUpdateMsg = useSelector(state => state.profile.successMsg);
+  const [active, setActive] = React.useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [modalPhoto, setModalPhoto] = React.useState(false);
+  const [err, setErr] = React.useState();
+  const [img, setImg] = React.useState();
+  const onUpdateName = val => {
+    setErr();
+    val.token = token;
+    dispatch(updateProfile(val));
+    if (errorMsg) {
+      setErr(errorMsg);
+    } else {
+      setTimeout(() => {
+        dispatch(getUpdate());
+        setModalVisible(!modalVisible);
+      }, 1000);
+    }
+  };
+
+  const onUploudPhoto = async types => {
+    const typePicked = types
+      ? await launchCamera()
+      : await launchImageLibrary();
+    // console.log(type);
+    if (typePicked) {
+      const imagePick = typePicked.assets[0];
+      if (imagePick.fileSize > 5 * 1024 * 1024) {
+        Alert.alert('Failed!!!', 'File image is so big', [
+          {
+            onPress: () => {
+              setModalPhoto(false);
+            },
+          },
+        ]);
+      } else {
+        setImg(imagePick.uri);
+        dispatch(updateProfile({token: token, picture: imagePick}));
+        if (!errorMsg) {
+          Alert.alert('Success', 'You have been change your picture.', [
+            {
+              onPress: () => {
+                dispatch(getUpdate());
+                setModalPhoto(false);
+              },
+            },
+          ]);
+        } else {
+          Alert.alert('Failed', 'Your upload is failed.', [
+            {
+              onPress: () => {
+                dispatch(getUpdate());
+              },
+            },
+          ]);
+        }
+      }
+    }
+  };
+
   React.useEffect(() => {
-    dispatch(getProfile({token: token}));
-  }, [dispatch, navigation, token]);
+    if (profileUpdateMsg) {
+      dispatch(getProfile({token: token}));
+      dispatch(getUpdate());
+    }
+    if (errorMsg) {
+      setTimeout(() => {
+        setErr();
+      }, 2000);
+    }
+  }, [dispatch, navigation, token, profileUpdateMsg, errorMsg]);
   return (
     <DashboardLayout
       child={
         <>
-          {profile ? (
+          {profile.photo_url ? (
             <ScrollView style={[styles.rootFlex1, style.root]}>
               <View style={style.wrapper}>
-                <View>
+                <TouchableOpacity onPress={() => setModalPhoto(true)}>
                   {profile.photo_url ? (
                     <Image
                       source={{
@@ -57,9 +136,37 @@ const Profile = ({route, navigation}) => {
                       />
                     </View>
                   )}
-                </View>
+                </TouchableOpacity>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalPhoto}
+                  onRequestClose={() => {
+                    setModalPhoto(!modalPhoto);
+                  }}>
+                  <View style={style.centeredView}>
+                    <View style={style.modalView}>
+                      <Text style={style.modalText1}>Choose photo from</Text>
+                      <View style={style.btnChoosePhoto}>
+                        <TouchableOpacity
+                          style={style.btnImgTextStyle}
+                          onPress={() => onUploudPhoto(false)}>
+                          <Icon name="ios-images" size={widthResponsive(2)} />
+                          <Text style={style.btnImageText}>Gallery</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={style.btnImgTextStyle}
+                          onPress={() => onUploudPhoto(true)}>
+                          <Icon name="ios-camera" size={widthResponsive(2)} />
+                          <Text style={style.btnImageText}>Camera</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                </Modal>
                 <TouchableOpacity
-                  style={[styles.flexDirectionRow, style.editButton]}>
+                  style={[styles.flexDirectionRow, style.editButton]}
+                  onPress={() => modalPhoto(true)}>
                   <Icon
                     name="ios-pencil-sharp"
                     size={widthResponsive(1)}
@@ -67,6 +174,83 @@ const Profile = ({route, navigation}) => {
                   />
                   <Text>Edit</Text>
                 </TouchableOpacity>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                  }}>
+                  <Formik
+                    initialValues={{
+                      firstName: `${profile.first_name}`,
+                      lastName: `${profile.last_name}`,
+                    }}
+                    onSubmit={onUpdateName}
+                    validationSchema={editProfileSchema}>
+                    {({
+                      errors,
+                      isValid,
+                      handleChange,
+                      handleSubmit,
+                      values,
+                    }) => (
+                      <View style={style.centeredView}>
+                        <View style={style.modalView}>
+                          <ScrollView>
+                            <Text style={style.modalText}>Edit name</Text>
+                            {err ? (
+                              <View style={style.successCard}>
+                                <Text style={style.textCardMessage}>{err}</Text>
+                              </View>
+                            ) : null}
+                            <View>
+                              <View style={style.wrapperInput}>
+                                <Text style={style.labelStyle}>First Name</Text>
+                                <TextInput
+                                  placeholder="first name"
+                                  style={style.modalInput}
+                                  value={values.firstName}
+                                  onChangeText={handleChange('firstName')}
+                                />
+                                {errors.firstName ? (
+                                  <Text style={style.errorText}>
+                                    {errors.firstName}
+                                  </Text>
+                                ) : null}
+                              </View>
+                              <View style={style.wrapperInput}>
+                                <Text style={style.labelStyle}>Last Name</Text>
+                                <TextInput
+                                  placeholder="last name"
+                                  style={style.modalInput}
+                                  value={values.lastName}
+                                  onChangeText={handleChange('lastName')}
+                                />
+                                {errors.lastName ? (
+                                  <Text style={style.errorText}>
+                                    {errors.lastName}
+                                  </Text>
+                                ) : null}
+                              </View>
+                            </View>
+                            <TouchableOpacity
+                              style={[
+                                style.button,
+                                !isValid
+                                  ? style.buttonCloseDisable
+                                  : style.buttonClose,
+                              ]}
+                              disabled={!isValid}
+                              onPress={handleSubmit}>
+                              <Text style={style.textStyle}>Update Name</Text>
+                            </TouchableOpacity>
+                          </ScrollView>
+                        </View>
+                      </View>
+                    )}
+                  </Formik>
+                </Modal>
                 <View>
                   <Text style={style.nameStyle}>{profile.username}</Text>
                   <Text style={style.phoneStyle}>
@@ -233,6 +417,118 @@ const style = StyleSheet.create({
   horizontal: {
     flexDirection: 'row',
     justifyContent: 'center',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    width: widthResponsive(18),
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderColor: 'gray',
+    borderWidth: 0.3,
+  },
+  btnChoosePhoto: {
+    flexDirection: 'row',
+    width: widthResponsive(8),
+    height: widthResponsive(4),
+    justifyContent: 'space-between',
+  },
+  btnImgTextStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btnImageText: {
+    fontSize: widthResponsive(0.8),
+    color: COLOR_5,
+    fontWeight: '500',
+  },
+  button: {
+    borderRadius: widthResponsive(0.5),
+    paddingHorizontal: widthResponsive(1.5),
+    paddingVertical: widthResponsive(0.5),
+    elevation: 2,
+    marginTop: widthResponsive(2),
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: COLOR_PRIMARY,
+  },
+  buttonCloseDisable: {
+    backgroundColor: COLOR_GRAY,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  modalText: {
+    fontSize: widthResponsive(1.2),
+    color: COLOR_5,
+    marginBottom: 15,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  modalText1: {
+    fontSize: widthResponsive(0.8),
+    color: COLOR_5,
+    marginBottom: 15,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  modalInput: {
+    borderBottomWidth: 0.3,
+    width: widthResponsive(15),
+    color: COLOR_5,
+    fontWeight: '500',
+  },
+  errorText: {
+    color: 'red',
+    marginVertical: 15,
+  },
+  wrapperInput: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  labelStyle: {
+    color: COLOR_5,
+    fontWeight: '700',
+    marginTop: widthResponsive(1),
+  },
+  successCard: {
+    backgroundColor: 'lightgreen',
+    paddingVertical: widthResponsive(0.5),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: widthResponsive(0.5),
+    marginBottom: widthResponsive(2),
+  },
+  errorCard: {
+    backgroundColor: 'lightcoral',
+    paddingVertical: widthResponsive(0.5),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: widthResponsive(0.5),
+    marginBottom: widthResponsive(2),
+  },
+  textCardMessage: {
+    color: COLOR_5,
+    fontSize: widthResponsive(0.8),
+    fontWeight: 'bold',
+  },
+  errorCardMessage: {
+    color: 'white',
+    fontSize: widthResponsive(0.8),
+    fontWeight: 'bold',
   },
 });
 

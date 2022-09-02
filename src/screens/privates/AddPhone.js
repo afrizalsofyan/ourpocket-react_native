@@ -28,15 +28,11 @@ const AddPhone = ({route, navigation}) => {
     if (profile.phone_number) {
       dispatch(updatePhone(val));
       dispatch(getProfile({token: token}));
-      setTimeout(() => {
-        navigation.pop(1);
-      }, 2000);
+      navigation.popToTop();
     } else {
       dispatch(addPhone(val));
       dispatch(getProfile({token: token}));
-      setTimeout(() => {
-        navigation.pop(1);
-      }, 2000);
+      navigation.popToTop();
     }
   };
   return (
