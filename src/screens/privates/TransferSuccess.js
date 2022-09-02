@@ -10,7 +10,6 @@ const TransferSuccess = ({route, navigation}) => {
   const data = route.params.data;
   const profile = useSelector(state => state.users.profile);
   const otherUser = useSelector(state => state.users.result);
-  console.log(data);
   return (
     <DashboardLayout
       child={

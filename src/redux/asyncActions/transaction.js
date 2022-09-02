@@ -63,7 +63,7 @@ export const topupBalance = createAsyncThunk(
 
 export const transferTransaction = createAsyncThunk(
   'transaction/transfer',
-  async ([request, cb]) => {
+  async request => {
     const result = {};
     try {
       const dataReq = {
@@ -79,7 +79,6 @@ export const transferTransaction = createAsyncThunk(
         'transactions/transfer',
         send,
       );
-      cb(data);
       return data;
     } catch (error) {
       result.errorMsg = error.response.data.message;

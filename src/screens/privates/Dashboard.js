@@ -2,7 +2,6 @@ import {
   View,
   StatusBar,
   FlatList,
-  TouchableHighlight,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
@@ -24,7 +23,6 @@ import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import {useSelector, useDispatch} from 'react-redux';
 import {getSomeTransaction} from '../../redux/asyncActions/transaction';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-const data = [1, 2, 3, 4, 5];
 
 const Dashboard = ({navigation}) => {
   const token = useSelector(state => state.auth.token);
@@ -69,8 +67,16 @@ const Dashboard = ({navigation}) => {
             </>
           ) : null}
           <View style={styleLocal.buttonWrapper}>
-            <ButtonTransction icon={'ios-arrow-up'} buttonText="Transfer" />
-            <ButtonTransction icon={'ios-add'} buttonText="TopUp" />
+            <ButtonTransction
+              icon={'ios-arrow-up'}
+              buttonText="Transfer"
+              onPress={() => navigation.navigate('Transfer')}
+            />
+            <ButtonTransction
+              icon={'ios-add'}
+              buttonText="TopUp"
+              onPress={() => navigation.navigate('Topup')}
+            />
           </View>
           <FlatList
             ListHeaderComponent={

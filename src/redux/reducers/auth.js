@@ -1,4 +1,3 @@
-import {getToken, removeToken, setToken, tokenData} from '../../helpers/http';
 import {createSlice} from '@reduxjs/toolkit';
 import {
   createPin,

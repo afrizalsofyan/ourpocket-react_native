@@ -1,6 +1,5 @@
-import {View, Text, ScrollView, StyleSheet, Alert} from 'react-native';
+import {View, ScrollView, StyleSheet, Alert} from 'react-native';
 import React from 'react';
-import styles from '../../styles/global';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import {COLOR_GRAY} from '../../styles/constant';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -26,7 +25,6 @@ const ChangePin = ({navigation}) => {
       setShowCompletedButton(false);
     }
   }, [enteredPin]);
-  const dummyPin = 123456;
   return (
     <DashboardLayout
       child={
@@ -56,7 +54,7 @@ const ChangePin = ({navigation}) => {
                     pinView.current.clear();
                   }
                   if (key === 'custom_right') {
-                    if (Number(enteredPin) != currentPin) {
+                    if (Number(enteredPin) !== currentPin) {
                       Alert.alert('Failed!!!', 'Your pin is wrong.');
                     } else {
                       Alert.alert('Success', 'Pin is matched', [

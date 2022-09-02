@@ -2,18 +2,23 @@ import {createSlice} from '@reduxjs/toolkit';
 import {getAllUser, getOtherUser, getProfile} from '../asyncActions/user';
 
 const initialState = {
-  results: {},
+  results: [],
   successMsg: null,
   errorMsg: null,
   result: {},
   profile: {},
   infoData: {},
+  resultNextUser: [],
 };
 
 const users = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    onRefreshPage: (state, action) => {
+      state.resultNextUser = [];
+    },
+  },
   extraReducers: build => {
     build.addCase(getAllUser.pending, state => {
       state.successMsg = null;
@@ -24,6 +29,7 @@ const users = createSlice({
       state.infoData = action.payload.info;
       state.successMsg = action.payload.message;
       state.errorMsg = action.payload.errorMsg;
+      state.resultNextUser.push(...action.payload.result);
     });
     build.addCase(getProfile.pending, state => {
       state.errorMsg = null;
@@ -47,4 +53,5 @@ const users = createSlice({
 });
 
 export {getAllUser, getProfile, getOtherUser};
+export const {onRefreshPage} = users.actions;
 export default users.reducer;

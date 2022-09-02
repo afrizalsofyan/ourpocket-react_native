@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, ScrollView, Alert} from 'react-native';
+import {View, StyleSheet, ScrollView, Alert} from 'react-native';
 import React from 'react';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -6,7 +6,10 @@ import ReactNativePinView from 'react-native-pin-view';
 import HeaderAuthContent from '../../components/HeaderAuthContent';
 import {COLOR_GRAY} from '../../styles/constant';
 import {useDispatch, useSelector} from 'react-redux';
-import {getSomeTransaction, transferTransaction} from '../../redux/asyncActions/transaction';
+import {
+  getSomeTransaction,
+  transferTransaction,
+} from '../../redux/asyncActions/transaction';
 
 const PinConfirmation = ({route, navigation}) => {
   const dispatch = useDispatch();
@@ -29,7 +32,6 @@ const PinConfirmation = ({route, navigation}) => {
       setShowCompletedButton(false);
     }
   }, [enteredPin]);
-  const dummyPin = 123456;
   return (
     <DashboardLayout
       child={
@@ -60,7 +62,7 @@ const PinConfirmation = ({route, navigation}) => {
                     pinView.current.clear();
                   }
                   if (key === 'custom_right') {
-                    if (Number(enteredPin) != pin) {
+                    if (Number(enteredPin) !== pin) {
                       Alert.alert('Failed!!!', 'Your pin is wrong.', [
                         {
                           onPress: () =>
@@ -79,7 +81,7 @@ const PinConfirmation = ({route, navigation}) => {
                               pin: enteredPin,
                               token: token,
                             };
-                            dispatch(transferTransaction([senData, (data)=>{console.log(data)}]));
+                            dispatch(transferTransaction(senData));
                             dispatch(getSomeTransaction({token: token}));
                             navigation.navigate('Transfer Sucess', {data});
                           },

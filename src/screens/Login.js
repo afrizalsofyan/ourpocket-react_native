@@ -5,7 +5,6 @@ import HeaderAuthContent from '../components/HeaderAuthContent';
 import InputField from '../components/InputField';
 import {COLOR_PRIMARY, widthResponsive} from '../styles/constant';
 import Button from '../components/Button';
-import {StackActions} from '@react-navigation/native';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useDispatch, useSelector} from 'react-redux';

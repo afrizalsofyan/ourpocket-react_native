@@ -4,25 +4,23 @@ import {
   StyleSheet,
   FlatList,
   Modal,
-  Alert,
   TouchableOpacity,
   TextInput,
 } from 'react-native';
 import React from 'react';
 import {COLOR_5, COLOR_PRIMARY, widthResponsive} from '../../styles/constant';
 import {TitleContent} from '../../components/Title';
-import {
-  CardTopup,
-  UserCardContent3,
-  UserCardContent4,
-} from '../../components/Card';
+import {CardTopup, UserCardContent4} from '../../components/Card';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import {HeaderCustom2} from '../../components/Header';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useDispatch, useSelector} from 'react-redux';
-import {topupBalance} from '../../redux/asyncActions/transaction';
+import {
+  getSomeTransaction,
+  topupBalance,
+} from '../../redux/asyncActions/transaction';
 import {getProfile} from '../../redux/asyncActions/user';
 
 const content = [
@@ -59,6 +57,7 @@ const TopUp = ({navigation}) => {
     dispatch(topupBalance(val));
     setTimeout(() => {
       setModalVisible(!modalVisible);
+      dispatch(getSomeTransaction({token: token}));
       navigation.navigate('Dashboard');
       dispatch(getProfile({token: token}));
     }, 500);
@@ -96,7 +95,9 @@ const TopUp = ({navigation}) => {
           onSubmit={onSubmitTopup}
           validationSchema={topupSchema}>
           {({errors, isValid, handleChange, handleSubmit, values}) => (
-            <View style={style.centeredView}>
+            <TouchableOpacity
+              style={style.centeredView}
+              onPress={() => setModalVisible(!modalVisible)}>
               <View style={style.modalView}>
                 <Text style={style.modalText}>Input amount</Text>
                 <TextInput
@@ -116,7 +117,7 @@ const TopUp = ({navigation}) => {
                   <Text style={style.textStyle}>Topup Now</Text>
                 </TouchableOpacity>
               </View>
-            </View>
+            </TouchableOpacity>
           )}
         </Formik>
       </Modal>

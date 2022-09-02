@@ -53,9 +53,9 @@ const Calendar = () => {
       return (
         <TouchableOpacity
           key={colIndex}
-          onPress={item => {
+          onPress={() => {
             setDayActive(() => {
-              if (!item.match && item != -1) {
+              if (!item.match && item !== -1) {
                 dayActive.setDate(item);
                 return setDayActive;
               }
@@ -64,15 +64,15 @@ const Calendar = () => {
           <Text
             style={[
               style.dayWrapper,
-              rowIndex == 0
+              rowIndex === 0
                 ? style.highlightHeaderDark
                 : style.highlightHeaderLight,
-              colIndex == 0
+              colIndex === 0
                 ? style.textHightLightLight
                 : style.textHightLightDark,
               item === dayActive.getDate() ? style.fontBoldActive : null,
             ]}>
-            {item != -1 ? item : ''}
+            {item !== -1 ? item : ''}
           </Text>
         </TouchableOpacity>
       );

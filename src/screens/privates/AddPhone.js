@@ -4,7 +4,7 @@ import Button from '../../components/Button';
 import InputField from '../../components/InputField';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import styles from '../../styles/global';
-import {COLOR_5, widthResponsive} from '../../styles/constant';
+import {widthResponsive} from '../../styles/constant';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -19,10 +19,8 @@ const phoneSchema = Yup.object().shape({
 
 const AddPhone = ({route, navigation}) => {
   const dispatch = useDispatch();
-  const dataPhone = route.params.data.phoneNumber;
   const profile = useSelector(state => state.users.profile);
   const token = useSelector(state => state.auth.token);
-  const [phone, setPhone] = React.useState(dataPhone);
   const onSubmitPhone = val => {
     val.token = token;
     if (profile.phone_number) {

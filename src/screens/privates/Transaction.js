@@ -3,15 +3,11 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  FlatList,
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
-import styles from '../../styles/global';
 import {COLOR_5, widthResponsive} from '../../styles/constant';
-import {dummy} from './History';
-import {UserCardContent} from '../../components/Card';
 
 const Transaction = ({navigation}) => {
   return (

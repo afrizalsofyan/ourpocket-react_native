@@ -1,12 +1,7 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import styles from '../styles/global';
-import {
-  COLOR_5,
-  COLOR_GRAY,
-  widthPropScreen,
-  widthResponsive,
-} from '../styles/constant';
+import {COLOR_5, widthResponsive} from '../styles/constant';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export const UserCardHeader = ({image, subtitle, onPress, icon}) => {

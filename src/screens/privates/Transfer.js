@@ -10,25 +10,19 @@ import React from 'react';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import {UserCardContent} from '../../components/Card';
 import styles from '../../styles/global';
-import {
-  COLOR_5,
-  COLOR_GRAY,
-  COLOR_PRIMARY,
-  widthResponsive,
-} from '../../styles/constant';
-import {dummy} from './History';
+import {COLOR_5, COLOR_GRAY, widthResponsive} from '../../styles/constant';
 import {useDispatch, useSelector} from 'react-redux';
 import {getAllUser, getOtherUser} from '../../redux/asyncActions/user';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {HeaderCustom2} from '../../components/Header';
-import {onNextPage, onRefreshPage} from '../../redux/reducers/transaction';
+import {onRefreshPage} from '../../redux/reducers/user';
 
 const Transfer = ({navigation}) => {
   const dispatch = useDispatch();
   const users = useSelector(state => state.users.results);
+  const nextUsers = useSelector(state => state.users.resultNextUser);
   const token = useSelector(state => state.auth.token);
-  const datas = useSelector(state => state.users.infoData);
-  let arrUsers = [];
+  const infoData = useSelector(state => state.users.infoData);
   const [keywords, setKeywords] = React.useState('');
   const [page, setPage] = React.useState(1);
   const onSearchUser = val => {
@@ -40,32 +34,29 @@ const Transfer = ({navigation}) => {
     }
   };
 
-  const onRefreshPages = () => {
-    setPage(1);
+  const onNextPageUsers = () => {
+    if (infoData.nextPage != null) {
+      setPage(infoData.nextPage);
+    }
   };
 
-  const onNextPage = () => {
-    if (datas.nextPage != null) {
-      setPage(datas.nextPage);
-    }
+  const onRefreshPageData = () => {
+    setPage(1);
+    setKeywords('');
+    dispatch(onRefreshPage());
   };
 
   React.useEffect(() => {
-    if (keywords || page) {
-      dispatch(
-        getAllUser({
-          token: token,
-          keywords: keywords.toLowerCase(),
-          limit: 3,
-          page: page,
-        }),
-      );
-      arrUsers.push(users);
+    if (keywords) {
+      dispatch(getAllUser({token: token, keywords: keywords.toLowerCase()}));
     } else {
-      dispatch(getAllUser({token: token, keywords: '', limit: 3, page: page}));
+      if (!keywords && page === 1) {
+        dispatch(getAllUser({token: token, limit: 3, page: 1}));
+      } else {
+        dispatch(getAllUser({token: token, limit: 3, page: page}));
+      }
     }
   }, [keywords, dispatch, token, page]);
-  console.log(users);
   return (
     <DashboardLayout
       child={
@@ -81,6 +72,7 @@ const Transfer = ({navigation}) => {
                 </View>
                 <TextInput
                   placeholder="Search reciever here"
+                  value={keywords}
                   onChangeText={onSearchUser}
                 />
               </View>
@@ -88,13 +80,20 @@ const Transfer = ({navigation}) => {
           />
           <View style={[styles.rootFlex1]}>
             <View style={styles.rootFlex1}>
-              {users && users ? (
+              {users ? (
                 <FlatList
-                  data={users}
-                  onRefresh={onRefreshPages}
+                  data={
+                    keywords
+                      ? users
+                      : !keywords && page === 1
+                      ? users
+                      : nextUsers
+                  }
                   refreshing={false}
-                  onEndReachedThreshold={0.05}
-                  onEndReached={onNextPage}
+                  onRefresh={onRefreshPageData}
+                  onEndReachedThreshold={0.01}
+                  onEndReached={onNextPageUsers}
+                  keyExtractor={item => item.id}
                   ListHeaderComponent={
                     <View style={style.contentWrapper}>
                       <View style={style.titleWrapper}>

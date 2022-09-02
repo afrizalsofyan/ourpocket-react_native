@@ -2,7 +2,7 @@ import {View, Text, ScrollView, StyleSheet} from 'react-native';
 import React from 'react';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import styles from '../../styles/global';
-import {CardTransaction, ErrorCard} from '../../components/Card';
+import {ErrorCard} from '../../components/Card';
 import {COLOR_5, widthResponsive} from '../../styles/constant';
 import InputField from '../../components/InputField';
 import Button from '../../components/Button';
@@ -31,7 +31,7 @@ const ChangePassword = ({route, navigation}) => {
   const [err, setErr] = React.useState();
   const onUpdatePassword = val => {
     console.log(val.newPassword !== val.currentPassword);
-    if (val.newPassword != val.repeatPassword) {
+    if (val.newPassword !== val.repeatPassword) {
       setErr('Confirmation password is invalid');
     } else {
       setErr();

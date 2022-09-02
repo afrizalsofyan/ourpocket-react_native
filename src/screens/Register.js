@@ -7,10 +7,9 @@ import {COLOR_PRIMARY, widthResponsive} from '../styles/constant';
 import Button from '../components/Button';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {register} from '../redux/asyncActions/auth';
 import styles from '../styles/global';
-import {ErrorCard, SuccessCard} from '../components/Card';
 
 const loginSchema = Yup.object().shape({
   username: Yup.string().min(6, 'Username must be 6 characters').required(),

@@ -4,9 +4,9 @@ import styles from '../styles/global';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {COLOR_5, widthResponsive} from '../styles/constant';
 
-export const ButtonTransction = ({buttonText, icon}) => {
+export const ButtonTransction = ({buttonText, icon, onPress}) => {
   return (
-    <TouchableOpacity style={styles.buttonTransaction}>
+    <TouchableOpacity style={styles.buttonTransaction} onPress={onPress}>
       <View style={styles.buttonRow}>
         <View style={styles.buttonWraperContent}>
           <Icon name={icon} size={widthResponsive(1.3)} color={'white'} />

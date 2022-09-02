@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  SafeAreaView,
   StyleSheet,
   ScrollView,
   Image,
@@ -46,7 +45,7 @@ const Profile = ({route, navigation}) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalPhoto, setModalPhoto] = React.useState(false);
   const [err, setErr] = React.useState();
-  const [img, setImg] = React.useState();
+  // const [img, setImg] = React.useState();
   const onUpdateName = val => {
     setErr();
     val.token = token;
@@ -77,7 +76,7 @@ const Profile = ({route, navigation}) => {
           },
         ]);
       } else {
-        setImg(imagePick.uri);
+        // setImg(imagePick.uri);
         dispatch(updateProfile({token: token, picture: imagePick}));
         if (!errorMsg) {
           Alert.alert('Success', 'You have been change your picture.', [
@@ -116,7 +115,7 @@ const Profile = ({route, navigation}) => {
     <DashboardLayout
       child={
         <>
-          {profile.photo_url ? (
+          {profile ? (
             <ScrollView style={[styles.rootFlex1, style.root]}>
               <View style={style.wrapper}>
                 <TouchableOpacity onPress={() => setModalPhoto(true)}>

@@ -1,21 +1,15 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-} from 'react-native';
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Dashboard from './Dashboard';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Icon2 from 'react-native-vector-icons/FontAwesome';
 import {COLOR_4, widthResponsive} from '../../styles/constant';
 import History from './History';
 import HeaderCustom from '../../components/Header';
 import {getHeaderTitle} from '@react-navigation/elements';
-import TransactionStack from './TransactionStack';
-import Profile from './Profile';
 import ProfileStack from './ProfileStack';
+import TopUp from './TopUp';
+import TransferStack from './TransferStack';
 
 const BottomNavigation = createBottomTabNavigator();
 
@@ -27,6 +21,7 @@ const HomeTab = () => {
         tabBarStyle: {height: widthResponsive(4)},
         tabBarShowLabel: false,
         tabBarActiveTintColor: COLOR_4,
+        // tabBarLabelStyle: {marginBottom: 4, fontSize: widthResponsive(0.6)}
       }}>
       <BottomNavigation.Screen
         options={{
@@ -37,6 +32,17 @@ const HomeTab = () => {
         }}
         name={'Dashboard'}
         component={Dashboard}
+      />
+      <BottomNavigation.Screen
+        name="Topup"
+        component={TopUp}
+        options={{
+          headerTransparent: true,
+          headerShown: false,
+          tabBarIcon: ({focused, color, size}) => (
+            <Icon2 name="plus" color={color} size={size} />
+          ),
+        }}
       />
       <BottomNavigation.Screen
         options={{
@@ -55,6 +61,18 @@ const HomeTab = () => {
         component={History}
       />
       <BottomNavigation.Screen
+        name="Transfer Stack"
+        component={TransferStack}
+        options={{
+          headerTransparent: true,
+          headerShown: false,
+          title: 'Transfer',
+          tabBarIcon: ({focused, color, size}) => (
+            <Icon2 name="arrow-up" color={color} size={size} />
+          ),
+        }}
+      />
+      {/* <BottomNavigation.Screen
         options={{
           headerShown: false,
           tabBarIcon: ({focused, color, size}) => (
@@ -63,7 +81,7 @@ const HomeTab = () => {
         }}
         name="Transaction"
         component={TransactionStack}
-      />
+      /> */}
       <BottomNavigation.Screen
         options={{
           headerShown: false,

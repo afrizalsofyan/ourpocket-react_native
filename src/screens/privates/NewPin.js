@@ -1,4 +1,4 @@
-import {View, Text, ScrollView, Alert, StyleSheet} from 'react-native';
+import {View, ScrollView, Alert, StyleSheet} from 'react-native';
 import React from 'react';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import HeaderAuthContent from '../../components/HeaderAuthContent';

@@ -4,29 +4,20 @@ import {
   StyleSheet,
   Dimensions,
   FlatList,
-  TouchableHighlight,
-  ScrollView,
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
-import {
-  COLOR_5,
-  COLOR_SECONDARY,
-  convertMoney,
-  widthResponsive,
-} from '../../styles/constant';
+import {COLOR_5, convertMoney, widthResponsive} from '../../styles/constant';
 import {TitleContent} from '../../components/Title';
 import {UserCardContent} from '../../components/Card';
 import {useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const data = [1, 2, 3, 4, 5];
-
 const TransactionDetail = ({navigation}) => {
   const transaction = useSelector(state => state.transaction.results);
   const day = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
   const dummyValue = [100, 40, 60, 70, 50, 90, 80];
-  const value = 100;
+  // const value = 100;
   let arrValue = [];
   arrValue = dummyValue.map((e, i) => {
     return (

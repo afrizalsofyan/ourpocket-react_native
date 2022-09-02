@@ -14,6 +14,7 @@ const initialState = {
   successMsg: null,
   infoPage: {},
   resultsNextPage: [],
+  // resultsNextPageFilter: [],
 };
 
 const transaction = createSlice({
@@ -21,11 +22,7 @@ const transaction = createSlice({
   initialState,
   reducers: {
     onNextPage: (state, action) => {
-      // state.results = ;
-      // state.resultsNextPage = [...action.payload];
-      state.results = [...state.results, ...action.payload];
-      // state.results = state.results.push(action.payload)
-      console.log(state.results);
+      state.resultsNextPage.push(...state.results);
     },
     onRefreshPage: state => {
       state.resultsNextPage = [];
@@ -60,6 +57,7 @@ const transaction = createSlice({
       state.infoPage = action.payload.info;
       state.successMsg = action.payload.message;
       state.errorMsg = action.payload.errorMsg;
+      // state.resultsNextPage.push(...action.payload.result);
     });
     build.addCase(topupBalance.pending, state => {
       state.result = [];

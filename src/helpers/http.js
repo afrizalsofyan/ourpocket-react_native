@@ -13,7 +13,7 @@ export const getToken = async () => {
 };
 export const removeToken = async () => {
   try {
-    const data = await AsyncStorage.removeItem('token');
+    return await AsyncStorage.removeItem('token');
   } catch (error) {
     console.log(error);
   }

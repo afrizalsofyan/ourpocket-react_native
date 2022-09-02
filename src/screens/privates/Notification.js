@@ -1,4 +1,4 @@
-import {View, Text, FlatList, StyleSheet} from 'react-native';
+import {View, FlatList, StyleSheet} from 'react-native';
 import React from 'react';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import styles from '../../styles/global';
@@ -28,11 +28,11 @@ const Notification = () => {
                       icon={
                         <Icon
                           name={
-                            item.type == 'accept'
+                            item.type === 'accept'
                               ? 'ios-arrow-up'
                               : 'ios-arrow-down'
                           }
-                          color={item.type == 'accept' ? 'orangered' : 'lime'}
+                          color={item.type === 'accept' ? 'orangered' : 'lime'}
                           size={widthResponsive(1.5)}
                         />
                       }

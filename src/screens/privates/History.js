@@ -1,15 +1,16 @@
 import {
   View,
   Text,
-  StatusBar,
   StyleSheet,
   FlatList,
   TouchableOpacity,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import {
   COLOR_5,
+  COLOR_PRIMARY,
   COLOR_SECONDARY,
   convertMoney,
   widthResponsive,
@@ -22,7 +23,7 @@ import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {useSelector, useDispatch} from 'react-redux';
 import {historyTransaction} from '../../redux/asyncActions/transaction';
-import {onNextPage} from '../../redux/reducers/transaction';
+import {onNextPage, onRefreshPage} from '../../redux/reducers/transaction';
 
 export const dummy = [
   {
@@ -71,127 +72,147 @@ export const dummy = [
 
 const History = () => {
   const history = useSelector(state => state.transaction.results);
+  const nextHistory = useSelector(state => state.transaction.resultsNextPage);
   const infoData = useSelector(state => state.transaction.infoPage);
-  const [data, setData] = useState([...history]);
   const token = useSelector(state => state.auth.token);
   const dispatch = useDispatch();
   const [activeAsc, setActiveAsc] = React.useState(false);
   const [activeDesc, setActiveDesc] = React.useState(false);
+  const [filterType, setFilterType] = React.useState(1);
   const [filterBy, setFilterBy] = React.useState(0);
-  const bottomSheet = useRef();
-  console.log(history);
-  let sortBy = '';
+  const [page, setPage] = React.useState(1);
+  let filterName = '';
   if (filterBy === 0) {
-    sortBy = 'time_transaction';
-  } else {
-    sortBy = 'amount';
+    filterName = 'time_transaction';
+  } else if (filterBy === 1) {
+    filterName = 'amount';
   }
-  const onRefreshData = () => {
-    setActiveAsc(false);
-    setActiveDesc(false);
-    setFilterBy(0);
-    // dispatch(historyTransaction({token: token, page: '1'}))
-  };
+
+  const bottomSheet = useRef();
 
   const onAscFilter = () => {
-    setActiveAsc(!activeAsc);
-    dispatch(historyTransaction({token: token, sortType: '0', sortBy: sortBy, limit: 10000}));
-    // if (activeAsc) {
-    // } else {
-    //   dispatch(historyTransaction({token: token, sortType: '1'}));
-    // }
-    setActiveDesc(false);
+    if (!activeAsc) {
+      setFilterType(0);
+      setActiveAsc(!activeAsc);
+      setActiveDesc(false);
+    } else {
+      setFilterType(1);
+      setActiveAsc(!activeAsc);
+      setActiveDesc(false);
+    }
+    setPage(1);
+    dispatch(onRefreshPage());
   };
   const onDescFilter = () => {
     setActiveDesc(!activeDesc);
     setActiveAsc(false);
-    dispatch(historyTransaction({token: token, sortType: '1', sortBy: sortBy, limit: 10000}));
-    // if (activeDesc) {
-    // } else {
-    //   onRefreshData();
-    // }
+    setFilterType(1);
+    setPage(1);
+    dispatch(onRefreshPage());
   };
 
   const onNextPageData = () => {
-    let type = '';
-    if (activeAsc) {
-      type = '0';
-    } else if (activeDesc) {
-      type = '1';
+    if (infoData.nextPage != null) {
+      setPage(infoData.nextPage);
     } else {
-      type = '1';
-    }
-    if (data.length < infoData.totalDatas) {
-      if (infoData.nextPage != null) {
-        dispatch(
-          historyTransaction({
-            token: token,
-            sortType: type,
-            sortBy: sortBy,
-            page: infoData.nextPage,
-          }),
-        );
+      if (nextHistory.length < infoData.totalDatas) {
+        setPage(infoData.currentPage + 1);
       }
-      if (infoData.currentPage !== 1) {
-        setData([...data, ...history]);
-      } else {
-        setData([...data]);
-      }
-      // dispatch(onNextPage(history));
     }
   };
+
+  const onRefreshData = () => {
+    setFilterBy(0);
+    setFilterType(1);
+    setActiveAsc(false);
+    setActiveDesc(false);
+    setPage(1);
+    dispatch(onRefreshPage());
+  };
+
+  console.log(filterName);
+  console.log(activeAsc);
+  console.log(activeDesc);
+  console.log(filterType);
+  console.log(page);
+  console.log(infoData);
+  console.log(nextHistory);
+
   React.useEffect(() => {
-    if (!activeAsc && !activeDesc) {
-      dispatch(historyTransaction({token: token,sortBy: sortBy, limit: 5}));
-      setData(history);
+    if (page === 1) {
+      dispatch(
+        historyTransaction({
+          token: token,
+          sortType: filterType,
+          sortBy: filterName,
+          page: 1,
+        }),
+      );
+      dispatch(onRefreshPage());
+    } else {
+      dispatch(
+        historyTransaction({
+          token: token,
+          sortType: filterType,
+          sortBy: filterName,
+          page: page,
+        }),
+      );
+      dispatch(onNextPage());
     }
-  }, [dispatch, token, activeAsc, activeDesc]);
+  }, [dispatch, token, filterType, filterName, page]);
   return (
     <DashboardLayout
       child={
         <>
           <View style={[style.root, style.marginContent]}>
-            {/* <StatusBar backgroundColor={COLOR_SECONDARY} /> */}
             <View style={style.root}>
               <TitleContent titleText={'Your Transaction'} />
-              <FlatList
-                onRefresh={onRefreshData}
-                refreshing={false}
-                data={activeAsc || activeDesc ? history : data}
-                contentContainerStyle={style.container}
-                onEndReachedThreshold={0.5}
-                onEndReached={!activeAsc || !activeDesc ? onNextPageData : null}
-                renderItem={({item}) => (
-                  <TouchableOpacity
-                    style={style.cardPadding}
-                    onPress={() =>
-                      console.log('this is data with id ' + item.id)
-                    }>
-                    <UserCardContent
-                      image={{
-                        uri: item.image_recipient,
-                      }}
-                      icon={
-                        !item.image_recipient ? (
-                          <View style={style.iconBox}>
-                            <Icon2
-                              name="attach-money"
-                              size={widthResponsive(1.5)}
-                            />
-                          </View>
-                        ) : null
-                      }
-                      name={
-                        item.type === 'topup' || item.type === 'accept'
-                          ? item.sender
-                          : item.recipient
-                      }
-                      type={item.type}
-                      amount={convertMoney(item.amount)}
-                    />
-                  </TouchableOpacity>
-                )}
-              />
+              {history ? (
+                <FlatList
+                  onRefresh={onRefreshData}
+                  refreshing={false}
+                  data={page === 1 ? history : nextHistory}
+                  // contentContainerStyle={style.container}
+                  onEndReached={onNextPageData}
+                  onEndReachedThreshold={0.5}
+                  keyExtractor={item => item.id}
+                  renderItem={({item}) => (
+                    <TouchableOpacity
+                      style={style.cardPadding}
+                      onPress={() =>
+                        console.log('this is data with id ' + item.id)
+                      }>
+                      <UserCardContent
+                        image={{
+                          uri: item.image_recipient,
+                        }}
+                        icon={
+                          !item.image_recipient ? (
+                            <View style={style.iconBox}>
+                              <Icon2
+                                name="attach-money"
+                                size={widthResponsive(1.5)}
+                              />
+                            </View>
+                          ) : null
+                        }
+                        name={
+                          item.type === 'topup' || item.type === 'accept'
+                            ? item.sender
+                            : item.recipient
+                        }
+                        type={item.type}
+                        amount={convertMoney(item.amount)}
+                      />
+                    </TouchableOpacity>
+                  )}
+                />
+              ) : (
+                <View style={[style.containerr, style.horizontal]}>
+                  <ActivityIndicator size={'large'} color={COLOR_PRIMARY} />
+                </View>
+              )}
             </View>
             <View style={style.boxFilter}>
               <TouchableOpacity
@@ -241,15 +262,17 @@ const History = () => {
                   <TouchableOpacity
                     style={[
                       style.btnFilterWrapper,
-                      filterBy == 0 ? style.bgFilterActive : style.bgWhite,
+                      filterBy === 0 ? style.bgFilterActive : style.bgWhite,
                     ]}
                     onPress={() => {
                       setFilterBy(0);
+                      setPage(1);
+                      dispatch(onRefreshPage());
                       bottomSheet.current.close();
                     }}>
                     <Text
                       style={
-                        filterBy == 0 ? style.textWhite : style.textButton
+                        filterBy === 0 ? style.textWhite : style.textButton
                       }>
                       Filter By Date
                     </Text>
@@ -257,15 +280,17 @@ const History = () => {
                   <TouchableOpacity
                     style={[
                       style.btnFilterWrapper,
-                      filterBy == 1 ? style.bgFilterActive : style.bgWhite,
+                      filterBy === 1 ? style.bgFilterActive : style.bgWhite,
                     ]}
                     onPress={() => {
                       setFilterBy(1);
+                      setPage(1);
+                      dispatch(onRefreshPage());
                       bottomSheet.current.close();
                     }}>
                     <Text
                       style={
-                        filterBy == 1 ? style.textWhite : style.textButton
+                        filterBy === 1 ? style.textWhite : style.textButton
                       }>
                       Filter By Amount
                     </Text>
@@ -345,6 +370,14 @@ const style = StyleSheet.create({
   },
   iconBox: {
     padding: widthResponsive(0.3),
+  },
+  containerr: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });
 
