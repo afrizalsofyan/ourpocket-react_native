@@ -144,7 +144,9 @@ const Profile = ({route, navigation}) => {
                   onRequestClose={() => {
                     setModalPhoto(!modalPhoto);
                   }}>
-                  <TouchableOpacity style={style.centeredView} onPress={()=> setModalPhoto(!modalPhoto)}>
+                  <TouchableOpacity
+                    style={style.centeredView}
+                    onPress={() => setModalPhoto(!modalPhoto)}>
                     <View style={style.modalView}>
                       <Text style={style.modalText1}>Choose photo from</Text>
                       <View style={style.btnChoosePhoto}>
@@ -252,7 +254,11 @@ const Profile = ({route, navigation}) => {
                   </Formik>
                 </Modal>
                 <View>
-                  <Text style={style.nameStyle}>{profile.username}</Text>
+                  <Text style={style.nameStyle}>
+                    {profile.first_name && profile.last_name
+                      ? `${profile.first_name} ${profile.last_name}`
+                      : profile.username}
+                  </Text>
                   <Text style={style.phoneStyle}>
                     {profile.phone_number ? profile.phone_number : '-'}
                   </Text>

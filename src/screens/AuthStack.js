@@ -16,6 +16,7 @@ import HeaderCustom from '../components/Header';
 import TransactionDetail from './privates/TransactionDetail';
 import styles from '../styles/global';
 import {useSelector} from 'react-redux';
+import RNBootSplash from 'react-native-bootsplash';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = () => {
@@ -30,7 +31,7 @@ const AuthStack = () => {
     }
   }, [token]);
   return (
-    <NavigationContainer>
+    <NavigationContainer onReady={() => RNBootSplash.hide()}>
       <Stack.Navigator>
         <>
           {!isLogin ? (

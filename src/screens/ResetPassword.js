@@ -49,18 +49,14 @@ const ResetPassword = ({navigation}) => {
 };
 const style = StyleSheet.create({
   wrapper: {
-    flex: 1,
-    height:
-      Dimensions.get('screen').height - Dimensions.get('screen').width / 2,
+    // flex: 1,
+    // height:
+    //   Dimensions.get('screen').height - Dimensions.get('screen').width / 2,
   },
-  inputWrapper: {
-    flex: 3,
-  },
-  wrapperButton: {
-    flex: 1,
-  },
-  fieldWrapper: {
-    marginTop: widthResponsive(1),
-  },
+  inputWrapper: {},
+  wrapperButton: {},
+  // fieldWrapper: {
+  //   marginTop: widthResponsive(1),
+  // },
 });
 export default ResetPassword;

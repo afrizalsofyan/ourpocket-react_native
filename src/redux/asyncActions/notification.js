@@ -1,7 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import qs from 'qs';
 import {http} from '../../helpers/http';
-// "emKNXc8SSPqU8Ub8QITMY7:APA91bE3KIsDO5EXI018CTroprHum6Lfe6pOeuWpb-OZX0LSRYb9nz0U6SchKdlSRMNPov9paLmMfAcZY_lcLbarZNWwfPi37savUJCnr9aJYUAK7BrVhyH1cY2OgXbmJ024hxsBMSa3"
+
 export const createFcmToken = createAsyncThunk('fcm/craete', async request => {
   const result = {};
   try {
@@ -14,3 +14,47 @@ export const createFcmToken = createAsyncThunk('fcm/craete', async request => {
     return result;
   }
 });
+
+export const getAllNotificationApp = createAsyncThunk(
+  'notification/all',
+  async request => {
+    const result = {};
+    try {
+      const {data} = await http(request.token).get('notification/reading');
+      return data;
+    } catch (error) {
+      result.errorMsg = error.response.data.message;
+      return result;
+    }
+  },
+);
+
+export const updateNotification = createAsyncThunk(
+  'notification/update',
+  async request => {
+    const result = {};
+    try {
+      const {data} = await http(request.token).patch(
+        'notification/' + request.id,
+      );
+      return data;
+    } catch (error) {
+      result.errorMsg = error.response.data.message;
+      return result;
+    }
+  },
+);
+
+export const getAllNotification = createAsyncThunk(
+  'notification/allRead',
+  async request => {
+    const result = {};
+    try {
+      const {data} = await http(request.token).get('notification');
+      return data;
+    } catch (error) {
+      result.errorMsg = error.response.data.message;
+      return result;
+    }
+  },
+);

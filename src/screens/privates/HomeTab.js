@@ -10,6 +10,7 @@ import ProfileStack from './ProfileStack';
 import TopUp from './TopUp';
 import TransferStack from './TransferStack';
 import DashboardStack from './DashboardStack';
+import HistoryStack from './HistoryStack';
 
 const BottomNavigation = createBottomTabNavigator();
 
@@ -48,7 +49,7 @@ const HomeTab = () => {
         options={{
           headerTransparent: true,
           header: ({navigation, options, route, back}) => {
-            const title = getHeaderTitle(options, route.name);
+            const title = getHeaderTitle(options, route.name).split(' ')[0];
             return (
               <HeaderCustom navigation={navigation} title={title} back={back} />
             );
@@ -57,8 +58,8 @@ const HomeTab = () => {
             <Icon name="ios-file-tray-full" color={color} size={size} />
           ),
         }}
-        name="History"
-        component={History}
+        name="History Stack"
+        component={HistoryStack}
       />
       <BottomNavigation.Screen
         name="Transfer Stack"

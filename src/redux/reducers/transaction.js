@@ -60,7 +60,6 @@ const transaction = createSlice({
       // state.resultsNextPage.push(...action.payload.result);
     });
     build.addCase(topupBalance.pending, state => {
-      state.result = [];
       state.errorMsg = null;
       state.successMsg = null;
     });

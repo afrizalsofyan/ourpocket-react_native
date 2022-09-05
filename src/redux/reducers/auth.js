@@ -32,14 +32,22 @@ const auth = createSlice({
     });
     build.addCase(login.fulfilled, (state, action) => {
       const result = action.payload.result;
+      const errorResponse = action.payload.errorMsg;
       if (result) {
-        state.results = action.payload;
         state.token = action.payload.result.token;
+        state.results = action.payload;
         state.successMsg = action.payload.message;
-        state.errorMsg = action.payload.errorMsg;
       } else {
-        state.errorMsg = action.payload.errorMsg;
+        if (errorResponse) {
+          state.errorMsg = action.payload.errorMsg;
+        } else {
+          state.errorMsg = action.payload.message;
+        }
       }
+      // if (result) {
+      // } else {
+      //   state.errorMsg = action.payload.errorMsg;
+      // }
     });
     build.addCase(register.pending, state => {
       state.errorMsg = null;

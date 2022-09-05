@@ -5,6 +5,8 @@ import Dashboard from './Dashboard';
 import Notification from './Notification';
 import CreatePin from '../CreatePin';
 import CreatePinSuccess from '../CreatePinSuccess';
+import NotificationDetail from './NotificationDetail';
+import TransactionItemDetail from './TransactionItemDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +24,22 @@ const DashboardStack = () => {
       <Stack.Screen
         name="Notification"
         component={Notification}
+        options={{
+          headerTransparent: true,
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Notification Detail"
+        component={NotificationDetail}
+        options={{
+          headerTransparent: true,
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Transaction Item Detail"
+        component={TransactionItemDetail}
         options={{
           headerTransparent: true,
           headerShown: false,

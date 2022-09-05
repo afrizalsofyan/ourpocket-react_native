@@ -7,7 +7,7 @@ PushNotification.configure({
     const fcmToken = token.token;
     store.dispatch(saveToken(fcmToken));
     store.dispatch(createFcmToken({token: token.token}));
-    // console.log('TOKEN:', token);
+    console.log('================TOKEN===================', token);
   },
   onNotification: notification => {
     console.log('NOTIFICATION:', notification);

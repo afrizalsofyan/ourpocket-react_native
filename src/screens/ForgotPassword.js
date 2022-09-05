@@ -40,15 +40,13 @@ const ForgotPassword = ({navigation}) => {
 
 const style = StyleSheet.create({
   wrapper: {
-    flex: 1,
-    height:
-      Dimensions.get('screen').height - Dimensions.get('screen').width / 2,
+    flex: 2,
   },
   inputWrapper: {
     flex: 2,
   },
   wrapperButton: {
-    flex: 1,
+    flex: 2,
   },
 });
 export default ForgotPassword;

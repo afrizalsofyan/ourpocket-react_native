@@ -44,23 +44,20 @@ export const UserCardHeader = ({image, subtitle, onPress, icon}) => {
   );
 };
 
-export const UserCardContent = ({image, name, type, amount, icon}) => {
+export const UserCardContent = ({
+  image,
+  name,
+  type,
+  recipient,
+  amount,
+  icon,
+}) => {
   return (
     <>
       <View style={styles.userCardContent}>
         <View style={style.userCardRow}>
           <View style={style.rowWrapper2}>
-            {icon ?? (
-              <Image
-                source={
-                  image
-                  //     {
-                  //     uri: {image},
-                  //   }
-                }
-                style={styles.imgCardUser}
-              />
-            )}
+            {icon ?? <Image source={image} style={styles.imgCardUser} />}
             <View style={style.userCardText}>
               <Text
                 ellipsizeMode="tail"
@@ -72,12 +69,21 @@ export const UserCardContent = ({image, name, type, amount, icon}) => {
             </View>
           </View>
           <View style={style.amountTextStyle}>
-            <Text
-              ellipsizeMode="tail"
-              numberOfLines={1}
-              style={style.textGreen}>
-              {amount}
-            </Text>
+            {recipient ? (
+              <Text
+                ellipsizeMode="tail"
+                numberOfLines={1}
+                style={style.textGreen}>
+                +{amount}
+              </Text>
+            ) : (
+              <Text
+                ellipsizeMode="tail"
+                numberOfLines={1}
+                style={style.textRed}>
+                -{amount}
+              </Text>
+            )}
           </View>
         </View>
       </View>
@@ -90,17 +96,7 @@ export const UserCardContent2 = ({image, name, type, amount, icon}) => {
       <View style={style.userCardContent}>
         <View style={style.userCardRow2}>
           <View style={style.rowWrapper2}>
-            {icon ?? (
-              <Image
-                source={
-                  image
-                  //     {
-                  //     uri: {image},
-                  //   }
-                }
-                style={styles.imgCardUser}
-              />
-            )}
+            {icon ?? <Image source={image} style={styles.imgCardUser} />}
             <View style={style.userCardText}>
               <Text
                 ellipsizeMode="tail"

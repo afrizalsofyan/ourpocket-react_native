@@ -23,8 +23,11 @@ import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import {useSelector, useDispatch} from 'react-redux';
 import {getSomeTransaction} from '../../redux/asyncActions/transaction';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/Ionicons';
 import {store} from '../../redux/store';
 import {getProfile} from '../../redux/asyncActions/user';
+import PushNotification from 'react-native-push-notification';
+import {getAllNotificationApp} from '../../redux/asyncActions/notification';
 
 const Dashboard = ({navigation}) => {
   const token = useSelector(state => state.auth.token);
@@ -36,23 +39,22 @@ const Dashboard = ({navigation}) => {
   );
   const errorMsgTransaction = useSelector(state => state.transaction.errorMsg);
   const [showMsg, setShowMsg] = React.useState(false);
+  const onRefreshData = () => {
+    dispatch(getSomeTransaction({token: token}));
+    dispatch(getProfile({token: token}));
+  };
   React.useEffect(() => {
     if (token) {
       dispatch(getSomeTransaction({token: token}));
-      // navigation.replace('Login');
       setShowMsg(true);
       setTimeout(() => {
         setShowMsg(false);
       }, 1500);
     }
-    if(profile.pin_number === null){
+    if (profile?.pin_number === null) {
       navigation.navigate('Create Pin');
     }
-    // if(profile.balance!==null){
-    //   dispatch(getProfile({token: token}));
-    //   dispatch(getProfile({token: token}));
-    // }
-  }, [dispatch, token, navigation, profile.pin_number, profile.balance]);
+  }, [dispatch, token, navigation, profile?.pin_number, profile.balance]);
   return (
     <DashboardLayout
       child={
@@ -62,8 +64,16 @@ const Dashboard = ({navigation}) => {
             image={{
               uri: profile?.photo_url,
             }}
+            icon={
+              !profile.photo_url ? (
+                <Icon2 name="ios-person" size={widthResponsive(3)} />
+              ) : null
+            }
             subtitle={`Rp. ${convertMoney(profile?.balance).split('IDR')[1]}`}
-            onPress={() => navigation.navigate('Notification')}
+            onPress={() => {
+              dispatch(getAllNotificationApp({token: token}));
+              navigation.navigate('Notification');
+            }}
           />
           {showMsg ? (
             <>
@@ -88,6 +98,8 @@ const Dashboard = ({navigation}) => {
             />
           </View>
           <FlatList
+            onRefresh={onRefreshData}
+            refreshing={false}
             ListHeaderComponent={
               <TitleContent
                 titleText={'Transaction History'}
@@ -101,7 +113,9 @@ const Dashboard = ({navigation}) => {
               <>
                 <TouchableOpacity
                   style={styleLocal.paddingBottomCard}
-                  onPress={() => console.log('card user pushed ' + item.id)}>
+                  onPress={() =>
+                    navigation.navigate('Transaction Item Detail', {item})
+                  }>
                   <UserCardContent
                     image={{
                       uri: item.image_recipient,
@@ -117,11 +131,20 @@ const Dashboard = ({navigation}) => {
                       ) : null
                     }
                     name={
-                      item.type === 'topup' || item.type === 'accept'
+                      item.recipient === profile.username &&
+                      item.sender !== 'topup'
                         ? item.sender
                         : item.recipient
                     }
-                    type={item.type}
+                    recipient={item.sender === profile.username ? false : true}
+                    type={
+                      item.type === 'payment' &&
+                      item.recipient === profile.username
+                        ? 'accept'
+                        : item.sender === profile.username
+                        ? 'send'
+                        : item.type
+                    }
                     amount={convertMoney(item.amount)}
                   />
                 </TouchableOpacity>

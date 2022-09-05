@@ -10,11 +10,13 @@ const AuthLayout = ({content}) => {
   return (
     <>
       <View style={styleLocal.parrent}>
-        <ScrollView style={styleLocal.wrapper}>
-          <View style={styleLocal.header}>
-            <Text style={styleLocal.titleHeader}>OurPocket</Text>
+        <ScrollView>
+          <View style={styleLocal.wrapper}>
+            <View style={styleLocal.header}>
+              <Text style={styleLocal.titleHeader}>OurPocket</Text>
+            </View>
+            <View style={styleLocal.content}>{content}</View>
           </View>
-          <View style={styleLocal.content}>{content}</View>
         </ScrollView>
       </View>
     </>
@@ -23,6 +25,8 @@ const AuthLayout = ({content}) => {
 
 const styleLocal = StyleSheet.create({
   wrapper: {
+    height: Dimensions.get('screen').height - 40,
+    // justifyContent: 'space-between',
     flex: 1,
   },
   parrent: {
@@ -30,7 +34,8 @@ const styleLocal = StyleSheet.create({
     backgroundColor: BG_COLOR_PRIMARY,
   },
   header: {
-    height: Dimensions.get('screen').width / 2,
+    flex: 1,
+    // height: Dimensions.get('screen').width / 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -40,7 +45,7 @@ const styleLocal = StyleSheet.create({
     fontWeight: '700',
   },
   content: {
-    flex: 1,
+    flex: 4,
     borderTopLeftRadius: widthResponsive(2),
     borderTopRightRadius: widthResponsive(2),
     elevation: 1.5,

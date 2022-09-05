@@ -11,21 +11,22 @@ const App = () => {
   const netInfo = useNetInfo();
   const [online, setOnline] = React.useState(true);
   React.useEffect(() => {
-    const init = async () => {
-      NetInfo.fetch().then(state => {
-        console.log('Connection type', state.type);
-        console.log('Is connected?', state.isConnected);
-        if (state.isConnected) {
-          setOnline(true);
-        } else {
-          setOnline(false);
-        }
-      });
-    };
-    init().finally(async () => {
-      await RNBootSplash.hide({fade: true});
-      console.log('Splash screen hidden');
+    NetInfo.fetch().then(state => {
+      console.log('Connection type', state.type);
+      console.log('Is connected?', state.isConnected);
+      if (state.isConnected) {
+        setOnline(true);
+      } else {
+        setOnline(false);
+      }
     });
+    // async () => {
+    //   await RNBootSplash.hide({fade: true});
+    //   console.log('Splash screen hidden');
+    // }
+    // const init = async () => {
+    // };
+    // init().finally();
   }, []);
 
   return online ? (

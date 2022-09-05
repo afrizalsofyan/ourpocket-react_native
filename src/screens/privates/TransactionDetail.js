@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const TransactionDetail = ({navigation}) => {
   const transaction = useSelector(state => state.transaction.results);
+  const profile = useSelector(state => state.users.profile);
   const day = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
   const dummyValue = [100, 40, 60, 70, 50, 90, 80];
   // const value = 100;
@@ -59,7 +60,9 @@ const TransactionDetail = ({navigation}) => {
           <>
             <TouchableOpacity
               style={styleLocal.paddingBottomCard}
-              onPress={() => console.log('card user pushed ' + item.id)}>
+              onPress={() =>
+                navigation.navigate('Transaction Item Detail', {item})
+              }>
               <UserCardContent
                 image={{
                   uri: item.image_recipient,
@@ -72,11 +75,21 @@ const TransactionDetail = ({navigation}) => {
                   ) : null
                 }
                 name={
-                  item.type === 'topup' || item.type === 'accept'
+                  item.recipient === profile.username && item.sender !== 'topup'
                     ? item.sender
                     : item.recipient
+                  // item.type === 'topup' || item.type === 'accept'
+                  //   ? item.sender
+                  //   : item.recipient
                 }
-                type={item.type}
+                recipient={item.sender === profile.username ? false : true}
+                type={
+                  item.type === 'payment' && item.recipient === profile.username
+                    ? 'accept'
+                    : item.sender === profile.username
+                    ? 'send'
+                    : item.type
+                }
                 amount={convertMoney(item.amount)}
               />
             </TouchableOpacity>

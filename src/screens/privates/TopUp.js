@@ -23,7 +23,6 @@ import {
 } from '../../redux/asyncActions/transaction';
 import {getProfile} from '../../redux/asyncActions/user';
 import {store} from '../../redux/store';
-import { onGetNewProfile } from '../../redux/reducers/user';
 
 const content = [
   {keyContent: 1, content: 'Go to the nearest ATM or you can use E-Banking.'},
@@ -52,9 +51,9 @@ const topupSchema = Yup.object().shape({
 const TopUp = ({navigation}) => {
   const dispatch = useDispatch();
   const token = useSelector(state => state.auth.token);
-  const profile = useSelector(() => store.getState().users.profile);
+  // const profile = useSelector(() => store.getState().users.profile);
   const [modalVisible, setModalVisible] = React.useState(false);
-  const errorMsg = useSelector(state => state.transaction.errorMsg);
+  // const errorMsg = useSelector(state => state.transaction.errorMsg);
   const onSubmitTopup = val => {
     val.amount = parseInt(val.amount, 10);
     val.token = token;
@@ -62,7 +61,6 @@ const TopUp = ({navigation}) => {
     // dispatch(onGetNewProfile());
     setTimeout(() => {
       dispatch(getSomeTransaction({token: token}));
-      dispatch(getProfile({token: token}));
       dispatch(getProfile({token: token}));
       dispatch(getProfile({token: token}));
       setModalVisible(!modalVisible);

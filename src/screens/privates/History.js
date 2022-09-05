@@ -70,11 +70,12 @@ export const dummy = [
   },
 ];
 
-const History = () => {
+const History = ({navigation}) => {
   const history = useSelector(state => state.transaction.results);
   const nextHistory = useSelector(state => state.transaction.resultsNextPage);
   const infoData = useSelector(state => state.transaction.infoPage);
   const token = useSelector(state => state.auth.token);
+  const profile = useSelector(state => state.users.profile);
   const dispatch = useDispatch();
   const [activeAsc, setActiveAsc] = React.useState(false);
   const [activeDesc, setActiveDesc] = React.useState(false);
@@ -175,13 +176,18 @@ const History = () => {
                   data={page === 1 ? history : nextHistory}
                   // contentContainerStyle={style.container}
                   onEndReached={onNextPageData}
-                  onEndReachedThreshold={0.5}
+                  onEndReachedThreshold={0.01}
+                  ListFooterComponent={
+                    <View>
+                      <Text style={{textAlign: 'center'}}>No data anymore</Text>
+                    </View>
+                  }
                   keyExtractor={item => item.id}
                   renderItem={({item}) => (
                     <TouchableOpacity
                       style={style.cardPadding}
                       onPress={() =>
-                        console.log('this is data with id ' + item.id)
+                        navigation.navigate('History Detail', {item})
                       }>
                       <UserCardContent
                         image={{
@@ -198,11 +204,25 @@ const History = () => {
                           ) : null
                         }
                         name={
-                          item.type === 'topup' || item.type === 'accept'
+                          item.recipient === profile.username &&
+                          item.sender !== 'topup'
                             ? item.sender
                             : item.recipient
+                          // item.type === 'topup' || item.type === 'accept'
+                          //   ? item.sender
+                          //   : item.recipient
                         }
-                        type={item.type}
+                        recipient={
+                          item.sender === profile.username ? false : true
+                        }
+                        type={
+                          item.type === 'payment' &&
+                          item.recipient === profile.username
+                            ? 'accept'
+                            : item.sender === profile.username
+                            ? 'send'
+                            : item.type
+                        }
                         amount={convertMoney(item.amount)}
                       />
                     </TouchableOpacity>

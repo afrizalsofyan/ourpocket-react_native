@@ -28,18 +28,18 @@ const Login = ({navigation}) => {
     setTimeout(() => {
       setShowMsg(false);
     }, 1500);
-    if (!errorMsg) {
-      PushNotification.localNotification({
-        channelId: 'login',
-        title: 'Login success',
-        message: 'Welcome back. Have a nice day.',
-      });
-    }
   }, [errorMsg]);
   const onLogin = val => {
     val.email = val.email.toLowerCase();
     val.fcmToken = fcmToken;
     dispatch(login(val));
+    if (!errorMsg) {
+      PushNotification.localNotification({
+        channelId: 'login',
+        title: 'Welcome',
+        message: 'Welcome back. Have a nice day.',
+      });
+    }
   };
   return (
     <AuthLayout
