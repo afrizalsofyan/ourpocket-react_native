@@ -22,7 +22,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CardButton} from '../../components/Button';
 import {useDispatch, useSelector} from 'react-redux';
-import {logout} from '../../redux/reducers/auth';
+import {logout, onLogout} from '../../redux/reducers/auth';
 import {getProfile} from '../../redux/asyncActions/user';
 import {getUpdate} from '../../redux/reducers/profile';
 import {Formik} from 'formik';
@@ -40,6 +40,7 @@ const Profile = ({route, navigation}) => {
   const profile = useSelector(state => state.users.profile);
   const errorMsg = useSelector(state => state.profile.errorMsg);
   const token = useSelector(state => state.auth.token);
+  const fcmToken = useSelector(state => state.notification.tokenFCM);
   const profileUpdateMsg = useSelector(state => state.profile.successMsg);
   const [active, setActive] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -67,7 +68,7 @@ const Profile = ({route, navigation}) => {
     // console.log(type);
     if (typePicked) {
       const imagePick = typePicked.assets[0];
-      if (imagePick.fileSize > 5 * 1024 * 1024) {
+      if (imagePick.fileSize > 1 * 1024 * 1024) {
         Alert.alert('Failed!!!', 'File image is so big', [
           {
             onPress: () => {
@@ -143,7 +144,7 @@ const Profile = ({route, navigation}) => {
                   onRequestClose={() => {
                     setModalPhoto(!modalPhoto);
                   }}>
-                  <View style={style.centeredView}>
+                  <TouchableOpacity style={style.centeredView} onPress={()=> setModalPhoto(!modalPhoto)}>
                     <View style={style.modalView}>
                       <Text style={style.modalText1}>Choose photo from</Text>
                       <View style={style.btnChoosePhoto}>
@@ -161,11 +162,11 @@ const Profile = ({route, navigation}) => {
                         </TouchableOpacity>
                       </View>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 </Modal>
                 <TouchableOpacity
                   style={[styles.flexDirectionRow, style.editButton]}
-                  onPress={() => modalPhoto(true)}>
+                  onPress={() => setModalVisible(true)}>
                   <Icon
                     name="ios-pencil-sharp"
                     size={widthResponsive(1)}
@@ -320,8 +321,8 @@ const Profile = ({route, navigation}) => {
                   <CardButton
                     btnText={'Logout'}
                     onPress={() => {
-                      dispatch(logout());
-                      navigation.replace('Login');
+                      dispatch(logout({token: token, fcmToken: fcmToken}));
+                      dispatch(onLogout());
                     }}
                   />
                 </View>

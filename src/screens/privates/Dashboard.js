@@ -23,12 +23,14 @@ import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import {useSelector, useDispatch} from 'react-redux';
 import {getSomeTransaction} from '../../redux/asyncActions/transaction';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {store} from '../../redux/store';
+import {getProfile} from '../../redux/asyncActions/user';
 
 const Dashboard = ({navigation}) => {
   const token = useSelector(state => state.auth.token);
   const dispatch = useDispatch();
-  const transaction = useSelector(state => state.transaction.results);
-  const profile = useSelector(state => state.users.profile);
+  const transaction = useSelector(() => store.getState().transaction.results);
+  const profile = useSelector(() => store.getState().users.profile);
   const successMsgTransaction = useSelector(
     state => state.transaction.successMsg,
   );
@@ -41,9 +43,16 @@ const Dashboard = ({navigation}) => {
       setShowMsg(true);
       setTimeout(() => {
         setShowMsg(false);
-      }, 600);
+      }, 1500);
     }
-  }, [dispatch, token, navigation]);
+    if(profile.pin_number === null){
+      navigation.navigate('Create Pin');
+    }
+    // if(profile.balance!==null){
+    //   dispatch(getProfile({token: token}));
+    //   dispatch(getProfile({token: token}));
+    // }
+  }, [dispatch, token, navigation, profile.pin_number, profile.balance]);
   return (
     <DashboardLayout
       child={
@@ -54,7 +63,7 @@ const Dashboard = ({navigation}) => {
               uri: profile?.photo_url,
             }}
             subtitle={`Rp. ${convertMoney(profile?.balance).split('IDR')[1]}`}
-            onPress={() => console.log('notif push')}
+            onPress={() => navigation.navigate('Notification')}
           />
           {showMsg ? (
             <>
@@ -70,7 +79,7 @@ const Dashboard = ({navigation}) => {
             <ButtonTransction
               icon={'ios-arrow-up'}
               buttonText="Transfer"
-              onPress={() => navigation.navigate('Transfer')}
+              onPress={() => navigation.navigate('Transfer Stack')}
             />
             <ButtonTransction
               icon={'ios-add'}

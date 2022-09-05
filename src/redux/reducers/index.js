@@ -5,6 +5,7 @@ import auth from './auth';
 import transaction from './transaction';
 import users from './user';
 import profile from './profile';
+import notification from './notification';
 
 const authPersistConfig = {
   key: 'auth',
@@ -18,6 +19,7 @@ const reducer = combineReducers({
   transaction,
   users,
   profile,
+  notification,
 });
 
 export default reducer;

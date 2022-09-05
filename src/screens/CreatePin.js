@@ -4,8 +4,12 @@ import ReactNativePinView from 'react-native-pin-view';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AuthLayout from '../components/layouts/AuthLayout';
 import HeaderAuthContent from '../components/HeaderAuthContent';
+import {useDispatch, useSelector} from 'react-redux';
+import {createPin} from '../redux/asyncActions/auth';
 
 const CreatePin = ({navigation}) => {
+  const dispatch = useDispatch();
+  const profile = useSelector(state => state.users.profile);
   const pinView = React.useRef(null);
   const [showRemoveButton, setShowRemoveButton] = React.useState(false);
   const [enteredPin, setEnteredPin] = React.useState('');
@@ -55,8 +59,15 @@ const CreatePin = ({navigation}) => {
                       'Success created Pin',
                       [
                         {
-                          onPress: () =>
-                            navigation.navigate('Create Pin Success'),
+                          onPress: () => {
+                            dispatch(
+                              createPin({
+                                email: profile.email,
+                                pin: enteredPin,
+                              }),
+                            );
+                            navigation.replace('Create Pin Success');
+                          },
                         },
                       ],
                     );

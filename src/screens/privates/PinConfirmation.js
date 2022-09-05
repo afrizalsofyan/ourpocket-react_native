@@ -10,6 +10,7 @@ import {
   getSomeTransaction,
   transferTransaction,
 } from '../../redux/asyncActions/transaction';
+import { getProfile } from '../../redux/asyncActions/user';
 
 const PinConfirmation = ({route, navigation}) => {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const PinConfirmation = ({route, navigation}) => {
   const [showRemoveButton, setShowRemoveButton] = React.useState(false);
   const [enteredPin, setEnteredPin] = React.useState('');
   const [showCompletedButton, setShowCompletedButton] = React.useState(false);
+  console.log(navigation)
   React.useEffect(() => {
     if (enteredPin.length > 0) {
       setShowRemoveButton(true);
@@ -82,7 +84,7 @@ const PinConfirmation = ({route, navigation}) => {
                               token: token,
                             };
                             dispatch(transferTransaction(senData));
-                            dispatch(getSomeTransaction({token: token}));
+                            navigation.popToTop();
                             navigation.navigate('Transfer Sucess', {data});
                           },
                         },

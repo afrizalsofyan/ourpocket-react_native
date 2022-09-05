@@ -18,6 +18,9 @@ const users = createSlice({
     onRefreshPage: (state, action) => {
       state.resultNextUser = [];
     },
+    onGetNewProfile: (state, action) => {
+      state.profile = {};
+    },
   },
   extraReducers: build => {
     build.addCase(getAllUser.pending, state => {
@@ -25,20 +28,24 @@ const users = createSlice({
       state.errorMsg = null;
     });
     build.addCase(getAllUser.fulfilled, (state, action) => {
+      state.errorMsg = action.payload.errorMsg;
       state.results = action.payload.result;
       state.infoData = action.payload.info;
       state.successMsg = action.payload.message;
-      state.errorMsg = action.payload.errorMsg;
-      state.resultNextUser.push(...action.payload.result);
+      if(!state.errorMsg){
+        state.resultNextUser.push(...action.payload.result);
+      }
     });
     build.addCase(getProfile.pending, state => {
       state.errorMsg = null;
       state.successMsg = null;
     });
     build.addCase(getProfile.fulfilled, (state, action) => {
-      state.profile = action.payload.result;
       state.errorMsg = action.payload.errorMsg;
-      state.successMsg = action.payload.message;
+      if(!state.errorMsg){
+        state.profile = action.payload.result;
+        state.successMsg = action.payload.message;
+      }
     });
     build.addCase(getOtherUser.pending, state => {
       state.errorMsg = null;
@@ -53,5 +60,5 @@ const users = createSlice({
 });
 
 export {getAllUser, getProfile, getOtherUser};
-export const {onRefreshPage} = users.actions;
+export const {onRefreshPage, onGetNewProfile} = users.actions;
 export default users.reducer;

@@ -28,8 +28,8 @@ const CreatePinSuccess = ({navigation}) => {
               />
               <View style={style.buttonWrapper}>
                 <Button
-                  buttonText={'Login Now'}
-                  onPress={() => navigation.navigate('Login')}
+                  buttonText={'Go to Dashboard'}
+                  onPress={() => navigation.replace('HomeTab')}
                 />
               </View>
             </View>

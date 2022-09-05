@@ -20,6 +20,7 @@ import {onRefreshPage} from '../../redux/reducers/user';
 const Transfer = ({navigation}) => {
   const dispatch = useDispatch();
   const users = useSelector(state => state.users.results);
+  const errorMsg = useSelector(state => state.users.errorMsg);
   const nextUsers = useSelector(state => state.users.resultNextUser);
   const token = useSelector(state => state.auth.token);
   const infoData = useSelector(state => state.users.infoData);
@@ -30,6 +31,8 @@ const Transfer = ({navigation}) => {
     if (val) {
       setKeywords(val);
     } else {
+      setPage(1);
+      dispatch(onRefreshPage());
       setKeywords('');
     }
   };
@@ -80,7 +83,7 @@ const Transfer = ({navigation}) => {
           />
           <View style={[styles.rootFlex1]}>
             <View style={styles.rootFlex1}>
-              {users ? (
+              {!errorMsg ? (
                 <FlatList
                   data={
                     keywords

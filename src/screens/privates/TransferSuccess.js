@@ -5,9 +5,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {COLOR_5, widthResponsive} from '../../styles/constant';
 import {TransferContent} from './TransferConfirmation';
 import {UserCardContent2} from '../../components/Card';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {getProfile} from '../../redux/asyncActions/user';
+import {getSomeTransaction} from '../../redux/asyncActions/transaction';
 const TransferSuccess = ({route, navigation}) => {
   const data = route.params.data;
+  const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.token);
   const profile = useSelector(state => state.users.profile);
   const otherUser = useSelector(state => state.users.result);
   return (
@@ -34,6 +38,10 @@ const TransferSuccess = ({route, navigation}) => {
               btnText={'Back to Home'}
               gotoDashboard={() => {
                 navigation.popToTop();
+                dispatch(getSomeTransaction({token: token}));
+                dispatch(getProfile({token: token}));
+                dispatch(getProfile({token: token}));
+                dispatch(getProfile({token: token}));
                 navigation.navigate('Dashboard');
               }}
               child={
@@ -46,9 +54,7 @@ const TransferSuccess = ({route, navigation}) => {
                       <UserCardContent2
                         name={profile.username}
                         type={
-                          profile.phone_number[0]
-                            ? profile.phone_number[0]
-                            : '-'
+                          profile.phone_number ? profile.phone_number[0] : '-'
                         }
                         image={{uri: profile.photo_url}}
                         icon={

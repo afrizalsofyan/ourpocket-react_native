@@ -36,7 +36,7 @@ const transaction = createSlice({
     build.addCase(getSomeTransaction.fulfilled, (state, action) => {
       state.results = action.payload.result;
       state.infoPage = action.payload.info;
-      state.successMsg = action.payload.message;
+      // state.successMsg = action.payload.message;
       state.errorMsg = action.payload.errorMsg;
     });
     build.addCase(transferTransaction.pending, state => {
@@ -55,7 +55,7 @@ const transaction = createSlice({
     build.addCase(historyTransaction.fulfilled, (state, action) => {
       state.results = action.payload.result;
       state.infoPage = action.payload.info;
-      state.successMsg = action.payload.message;
+      // state.successMsg = action.payload.message;
       state.errorMsg = action.payload.errorMsg;
       // state.resultsNextPage.push(...action.payload.result);
     });

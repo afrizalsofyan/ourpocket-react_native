@@ -10,6 +10,7 @@ import * as Yup from 'yup';
 import {useDispatch, useSelector} from 'react-redux';
 import {login} from '../redux/asyncActions/auth';
 import {ErrorCard, SuccessCard} from '../components/Card';
+import PushNotification from 'react-native-push-notification';
 
 const loginSchema = Yup.object().shape({
   email: Yup.string().email('Email format invalid').required(),
@@ -18,20 +19,26 @@ const loginSchema = Yup.object().shape({
 
 const Login = ({navigation}) => {
   const dispatch = useDispatch();
-  const token = useSelector(state => state.auth.token);
   const errorMsg = useSelector(state => state.auth.errorMsg);
   const successMsg = useSelector(state => state.auth.successMsg);
+  const fcmToken = useSelector(state => state.notification.tokenFCM);
   const [showMsg, setShowMsg] = React.useState(false);
   React.useEffect(() => {
-    if (token) {
-      navigation.replace('HomeTab');
-    }
     setShowMsg(true);
     setTimeout(() => {
       setShowMsg(false);
     }, 1500);
-  }, [token, navigation]);
+    if (!errorMsg) {
+      PushNotification.localNotification({
+        channelId: 'login',
+        title: 'Login success',
+        message: 'Welcome back. Have a nice day.',
+      });
+    }
+  }, [errorMsg]);
   const onLogin = val => {
+    val.email = val.email.toLowerCase();
+    val.fcmToken = fcmToken;
     dispatch(login(val));
   };
   return (
@@ -44,12 +51,10 @@ const Login = ({navigation}) => {
               'Login to your existing account to access all the features in Our Pocket.'
             }
           />
-          {showMsg ? (
-            errorMsg ? (
-              <ErrorCard text={errorMsg} />
-            ) : successMsg ? (
-              <SuccessCard text={successMsg} />
-            ) : null
+          {errorMsg ? (
+            <ErrorCard text={errorMsg} />
+          ) : successMsg ? (
+            <SuccessCard text={successMsg} />
           ) : null}
           <Formik
             initialValues={{email: '', password: ''}}

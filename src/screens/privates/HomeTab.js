@@ -1,6 +1,5 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Dashboard from './Dashboard';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import {COLOR_4, widthResponsive} from '../../styles/constant';
@@ -10,6 +9,7 @@ import {getHeaderTitle} from '@react-navigation/elements';
 import ProfileStack from './ProfileStack';
 import TopUp from './TopUp';
 import TransferStack from './TransferStack';
+import DashboardStack from './DashboardStack';
 
 const BottomNavigation = createBottomTabNavigator();
 
@@ -30,8 +30,8 @@ const HomeTab = () => {
             <Icon name={'ios-home'} color={color} size={size} />
           ),
         }}
-        name={'Dashboard'}
-        component={Dashboard}
+        name={'Dashboard Stack'}
+        component={DashboardStack}
       />
       <BottomNavigation.Screen
         name="Topup"

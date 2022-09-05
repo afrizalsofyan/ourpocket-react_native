@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {backendUrl} from '../config/env';
+import NetInfo from "@react-native-community/netinfo";
 
 export let tokenData = null;
 
@@ -27,6 +28,20 @@ export const setToken = async token => {
   }
 };
 
+export const isNetworkConnection = () => {
+  return new Promise((resolve, rejection) => {
+    NetInfo.fetch().then(state => {
+      console.log('Connection type: ', state.type);
+      console.log('Is Connected?', state.isConnected);
+      if (state.isConnected) {
+        resolve();
+      } else {
+        rejection();
+      }
+    });
+  });
+};
+
 export const http = token => {
   const headers = {};
   if (token) {
@@ -34,7 +49,8 @@ export const http = token => {
   }
   return axios.create({
     headers,
-    baseURL: 'http://192.168.100.11:3335',
+    // baseURL: 'http://192.168.100.11:3335',
     // baseURL: backendUrl,
+    baseURL: 'https://fw9-backend.vercel.app/',
   });
 };

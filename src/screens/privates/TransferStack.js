@@ -63,10 +63,11 @@ const TransferStack = () => {
         component={TransferConfirmation}
         options={{
           headerTransparent: true,
+          disableBackButtonOverride: true,
           header: ({navigation, options, route, back}) => {
             const title = getHeaderTitle(options, route.name).split(' ')[1];
             const data = route.params.sendData;
-            console.log(data);
+            console.log(back);
             return (
               <HeaderCustom2
                 navigation={navigation}

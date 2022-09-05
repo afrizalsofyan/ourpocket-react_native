@@ -3,6 +3,7 @@ import {
   createPin,
   getLinkForgetPassword,
   login,
+  logout,
   register,
   resetPassword,
 } from '../asyncActions/auth';
@@ -19,14 +20,14 @@ const auth = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    logout: () => {
+    onLogout: () => {
       // async () => await removeToken();
       return initialState;
     },
   },
   extraReducers: build => {
     build.addCase(login.pending, state => {
-      // state.errorMsg = null;
+      state.errorMsg = null;
       state.successMsg = null;
     });
     build.addCase(login.fulfilled, (state, action) => {
@@ -37,7 +38,7 @@ const auth = createSlice({
         state.successMsg = action.payload.message;
         state.errorMsg = action.payload.errorMsg;
       } else {
-        state.errorMsg = action.payload.message;
+        state.errorMsg = action.payload.errorMsg;
       }
     });
     build.addCase(register.pending, state => {
@@ -77,9 +78,26 @@ const auth = createSlice({
       state.errorMsg = action.payload.errorMsg;
       state.successMsg = action.payload.successMsg;
     });
+    build.addCase(logout.pending, state => {
+      state.errorMsg = null;
+      state.successMsg = null;
+    });
+    build.addCase(logout.fulfilled, (state, action) => {
+      // state.token = null;
+      // state.successMsg = action.payload.successMsg;
+      // state.errorMsg = action.payload.errorMsg;
+      return initialState;
+    });
   },
 });
 
-export {login, register, getLinkForgetPassword, resetPassword, createPin};
-export const {logout} = auth.actions;
+export {
+  login,
+  register,
+  getLinkForgetPassword,
+  resetPassword,
+  createPin,
+  logout,
+};
+export const {onLogout} = auth.actions;
 export default auth.reducer;

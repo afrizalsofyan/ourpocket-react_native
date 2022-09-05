@@ -69,19 +69,26 @@ export const getLinkForgetPassword = createAsyncThunk(
 export const createPin = createAsyncThunk('user/createPin', async request => {
   const results = {};
   try {
-    const token = getToken();
-    if (token) {
-      const send = qs.stringify(request);
-      const {data} = await http().patch('auth/createPin', send);
-      results.data = data.result[0];
-      results.successMsg = data.message;
-      return results;
-    } else {
-      results.errorMsg = 'Token not found. Login first!!!';
-      return results;
-    }
+    const send = qs.stringify(request);
+    const {data} = await http().post('auth/createPin', send);
+    results.data = data.result[0];
+    results.successMsg = data.message;
+    return results;
   } catch (error) {
     results.errorMsg = error.response.data.message;
     return results;
+  }
+});
+
+export const logout = createAsyncThunk('auth/logout', async request => {
+  const result = {};
+  try {
+    const send = qs.stringify({fcmToken: request.fcmToken});
+    const {data} = await http(request.token).patch('auth/logout', send);
+    result.successMsg = data.message;
+    return result;
+  } catch (error) {
+    result.errorMsg = error.response.data.message;
+    return result;
   }
 });
