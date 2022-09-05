@@ -7,9 +7,11 @@ import {COLOR_PRIMARY, widthResponsive} from '../styles/constant';
 import Button from '../components/Button';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {register} from '../redux/asyncActions/auth';
 import styles from '../styles/global';
+import {ErrorCard} from '../components/Card';
+import {store} from '../redux/store';
 
 const loginSchema = Yup.object().shape({
   username: Yup.string().min(6, 'Username must be 6 characters').required(),
@@ -19,11 +21,16 @@ const loginSchema = Yup.object().shape({
 
 const Register = ({navigation}) => {
   const dispatch = useDispatch();
-  const onRegister = val => {
-    dispatch(register(val));
+  const errorMsg = useSelector(() => store.getState().auth.errorMsg);
+  const onRegister = async val => {
+    val.username = val.username.toLowerCase();
+    val.email = val.email.toLowerCase();
+    await dispatch(register(val));
+    if (errorMsg != null || errorMsg !== undefined) {
+      navigation.replace('Login');
+    }
   };
-  // console.log(errorMsg);
-  // console.log(successMsg);
+
   return (
     <AuthLayout
       content={
@@ -32,6 +39,7 @@ const Register = ({navigation}) => {
             title={'Sign Up'}
             subtitle={'Create your account to access Our Pocket.'}
           />
+          {errorMsg ? <ErrorCard text={errorMsg} /> : null}
           <Formik
             initialValues={{username: '', email: '', password: ''}}
             validationSchema={loginSchema}
@@ -43,7 +51,7 @@ const Register = ({navigation}) => {
                     icon={'ios-person-outline'}
                     placeholder={'Enter your username'}
                     value={values.username}
-                    onChange={handleChange('username')}
+                    onChange={text => handleChange('username')(text.trim())}
                   />
                 </View>
                 {errors.username && (
