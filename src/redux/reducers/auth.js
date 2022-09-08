@@ -10,6 +10,7 @@ import {
 
 const initialState = {
   token: null,
+  refreshToken: null,
   successMsg: null,
   errorMsg: null,
   results: {},
@@ -24,6 +25,9 @@ const auth = createSlice({
       // async () => await removeToken();
       return initialState;
     },
+    setRefreshToken: (state, action) => {
+      state.token = action.payload;
+    },
   },
   extraReducers: build => {
     build.addCase(login.pending, state => {
@@ -35,6 +39,7 @@ const auth = createSlice({
       const errorResponse = action.payload.errorMsg;
       if (result) {
         state.token = action.payload.result.token;
+        state.refreshToken = action.payload.result.refreshToken;
         state.results = action.payload;
         state.successMsg = action.payload.message;
       } else {
@@ -107,5 +112,5 @@ export {
   createPin,
   logout,
 };
-export const {onLogout} = auth.actions;
+export const {onLogout, setRefreshToken} = auth.actions;
 export default auth.reducer;

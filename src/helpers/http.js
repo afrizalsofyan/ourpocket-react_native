@@ -1,7 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {backendUrl} from '../config/env';
-import NetInfo from "@react-native-community/netinfo";
+import NetInfo from '@react-native-community/netinfo';
+import {store} from '../redux/store';
+import { logout } from '../redux/asyncActions/auth';
+import { onLogout, setRefreshToken } from '../redux/reducers/auth';
 
 export let tokenData = null;
 
@@ -47,11 +50,47 @@ export const http = token => {
   if (token) {
     headers.authorization = `Bearer ${token}`;
   }
-  return axios.create({
+  const instance = axios.create({
     headers,
     // baseURL: 'https://opo-backend-v1.herokuapp.com/',
     // baseURL: 'http://192.168.100.11:3335',
     // baseURL: backendUrl,
     baseURL: 'https://fw9-backend.vercel.app/',
   });
+
+  instance.interceptors.request.use(
+    config => {
+      console.log(config);
+      // const token = store.getState().auth.token;
+      // console.log(token);
+      return config;
+    },
+    e => {
+      console.log(e);
+      return Promise.reject(e);
+    },
+  );
+  instance.interceptors.response.use(
+    response => {
+      console.log(response);
+      return response;
+    },
+    e => {
+      if (e.response.status === 400) {
+        console.log('error input');
+      }
+      if (e.response) {
+        if (e.response.status === 401) {
+          const refreshToken = store.getState().auth.refreshToken;
+          if (refreshToken !== null) {
+            store.dispatch(setRefreshToken(refreshToken));
+          } else {
+            store.dispatch(onLogout());
+          }
+        }
+      }
+      return Promise.reject(e);
+    },
+  );
+  return instance;
 };
