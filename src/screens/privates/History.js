@@ -131,14 +131,6 @@ const History = ({navigation}) => {
     dispatch(onRefreshPage());
   };
 
-  console.log(filterName);
-  console.log(activeAsc);
-  console.log(activeDesc);
-  console.log(filterType);
-  console.log(page);
-  console.log(infoData);
-  console.log(nextHistory);
-
   React.useEffect(() => {
     if (page === 1) {
       dispatch(

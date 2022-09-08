@@ -185,8 +185,8 @@ const Profile = ({route, navigation}) => {
                   }}>
                   <Formik
                     initialValues={{
-                      firstName: `${profile.first_name}`,
-                      lastName: `${profile.last_name}`,
+                      firstName: `${profile.first_name ?? ''}`,
+                      lastName: `${profile.last_name ?? ''}`,
                     }}
                     onSubmit={onUpdateName}
                     validationSchema={editProfileSchema}>
@@ -197,7 +197,7 @@ const Profile = ({route, navigation}) => {
                       handleSubmit,
                       values,
                     }) => (
-                      <View style={style.centeredView}>
+                      <TouchableOpacity style={style.centeredView} onPress={()=>setModalVisible(!modalVisible)}>
                         <View style={style.modalView}>
                           <ScrollView>
                             <Text style={style.modalText}>Edit name</Text>
@@ -249,7 +249,7 @@ const Profile = ({route, navigation}) => {
                             </TouchableOpacity>
                           </ScrollView>
                         </View>
-                      </View>
+                      </TouchableOpacity>
                     )}
                   </Formik>
                 </Modal>

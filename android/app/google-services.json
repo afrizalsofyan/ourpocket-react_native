@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "1012811501111",
-    "project_id": "ourpocket-af4b7",
-    "storage_bucket": "ourpocket-af4b7.appspot.com"
+    "project_number": "857946837644",
+    "project_id": "ourpocket-55940",
+    "storage_bucket": "ourpocket-55940.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1012811501111:android:7798e961a252393bf5b9b2",
+        "mobilesdk_app_id": "1:857946837644:android:9d81a05e6c3a449d71e1a9",
         "android_client_info": {
           "package_name": "com.ourpocket"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1012811501111-d5pc1jmgjjqiomtl0ndvm9dee6scfg7o.apps.googleusercontent.com",
+          "client_id": "857946837644-tahnv5f827j225v4s6o7utii35518u80.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDroyBMCUPCWlGFDnWarlekKMvw9kjsFLQ"
+          "current_key": "AIzaSyCZRes_URo0Cpb2vvhZKblOTcTtezbM4rU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1012811501111-d5pc1jmgjjqiomtl0ndvm9dee6scfg7o.apps.googleusercontent.com",
+              "client_id": "857946837644-tahnv5f827j225v4s6o7utii35518u80.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

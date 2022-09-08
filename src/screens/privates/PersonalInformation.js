@@ -58,7 +58,7 @@ const PersonalInformation = ({navigation}) => {
                   </View>
                   <View style={style.paddingTextCard}>
                     <Text style={style.subtitleCard}>
-                      {profile.phone_number[0] ?? '-'}
+                      {profile.phone_number ?? '-'}
                     </Text>
                   </View>
                 </View>

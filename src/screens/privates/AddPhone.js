@@ -57,7 +57,7 @@ const AddPhone = ({route, navigation}) => {
                       <InputField
                         icon={'ios-call-outline'}
                         placeholder={
-                          profile.phone_number.length >= 1
+                          profile.phone_number
                             ? 'Update your phone'
                             : 'Add your phone'
                         }

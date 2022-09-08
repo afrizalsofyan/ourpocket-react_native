@@ -22,3 +22,10 @@ PushNotification.createChannel(
   },
   created => console.log(`createChannel returned '${created}'`),
 );
+PushNotification.createChannel(
+  {
+    channelId: 'fcm_fallback_notification_channel',
+    channelName: 'Remote notif',
+  },
+  created => console.log(`createChannel returned '${created}'`),
+);

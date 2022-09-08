@@ -20,6 +20,7 @@ const loginSchema = Yup.object().shape({
 const Login = ({navigation}) => {
   const dispatch = useDispatch();
   const successMsg = useSelector(state => state.auth.successMsg);
+  const errorMsg = useSelector(state => state.auth.errorMsg);
   const fcmToken = useSelector(state => state.notification.tokenFCM);
   const [showMsg, setShowMsg] = React.useState(false);
   // if (successMsg !== null || successMsg !== undefined) {
@@ -35,13 +36,14 @@ const Login = ({navigation}) => {
     val.email = val.email.toLowerCase();
     val.fcmToken = fcmToken;
     dispatch(login(val));
-    if (successMsg) {
-      PushNotification.localNotification({
-        channelId: 'login',
-        title: 'Welcome',
-        message: 'Welcome back. Have a nice day.',
-      });
-    }
+    // PushNotification.localNotification({
+    //   channelId: 'login',
+    //   title: 'Welcome',
+    //   message: 'Welcome back. Have a nice day.',
+    // });
+    // PushNotification.getChannels(channel =>
+    //   console.log('CHANEL===========', channel),
+    // );
   };
   return (
     <AuthLayout
@@ -54,7 +56,13 @@ const Login = ({navigation}) => {
             }
           />
           {showMsg ? (
-            <>{successMsg ? <SuccessCard text={successMsg} /> : null}</>
+            <>
+              {successMsg ? (
+                <SuccessCard text={successMsg} />
+              ) : errorMsg ? (
+                <ErrorCard text={errorMsg} />
+              ) : null}
+            </>
           ) : null}
           <Formik
             initialValues={{email: '', password: ''}}
