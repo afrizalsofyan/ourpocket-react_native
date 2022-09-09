@@ -5,17 +5,25 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  Image,
+  ActivityIndicator,
 } from 'react-native';
 import React from 'react';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import {UserCardContent} from '../../components/Card';
 import styles from '../../styles/global';
-import {COLOR_5, COLOR_GRAY, widthResponsive} from '../../styles/constant';
+import {
+  COLOR_5,
+  COLOR_GRAY,
+  COLOR_PRIMARY,
+  widthResponsive,
+} from '../../styles/constant';
 import {useDispatch, useSelector} from 'react-redux';
 import {getAllUser, getOtherUser} from '../../redux/asyncActions/user';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {HeaderCustom2} from '../../components/Header';
 import {onRefreshPage} from '../../redux/reducers/user';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Transfer = ({navigation}) => {
   const dispatch = useDispatch();
@@ -26,6 +34,7 @@ const Transfer = ({navigation}) => {
   const infoData = useSelector(state => state.users.infoData);
   const [keywords, setKeywords] = React.useState('');
   const [page, setPage] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
   const onSearchUser = val => {
     console.log(val);
     if (val) {
@@ -47,16 +56,32 @@ const Transfer = ({navigation}) => {
     setPage(1);
     setKeywords('');
     dispatch(onRefreshPage());
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true);
+      setTimeout(() => {
+        dispatch(onRefreshPage());
+        setPage(1);
+        setKeywords('');
+        setLoading(false);
+      }, 1000);
+    }, []),
+  );
 
   React.useEffect(() => {
     if (keywords) {
       dispatch(getAllUser({token: token, keywords: keywords.toLowerCase()}));
     } else {
-      if (!keywords && page === 1) {
-        dispatch(getAllUser({token: token, limit: 3, page: 1}));
+      if (keywords === '' && page === 1) {
+        dispatch(getAllUser({token: token, limit: 4, page: 1}));
       } else {
-        dispatch(getAllUser({token: token, limit: 3, page: page}));
+        dispatch(getAllUser({token: token, limit: 4, page: page}));
       }
     }
   }, [keywords, dispatch, token, page]);
@@ -83,60 +108,71 @@ const Transfer = ({navigation}) => {
           />
           <View style={[styles.rootFlex1]}>
             <View style={styles.rootFlex1}>
-              {!errorMsg ? (
-                <FlatList
-                  data={
-                    keywords
-                      ? users
-                      : !keywords && page === 1
-                      ? users
-                      : nextUsers
-                  }
-                  refreshing={false}
-                  onRefresh={onRefreshPageData}
-                  onEndReachedThreshold={0.01}
-                  onEndReached={onNextPageUsers}
-                  keyExtractor={item => item.id}
-                  ListHeaderComponent={
-                    <View style={style.contentWrapper}>
-                      <View style={style.titleWrapper}>
-                        <View style={style.textWrapper}>
-                          <Text style={style.textTitle}>Contact</Text>
+              {!loading ? (
+                <>
+                  {!errorMsg || !nextUsers ? (
+                    <FlatList
+                      data={
+                        keywords
+                          ? users
+                          : !keywords && page === 1
+                          ? users
+                          : nextUsers
+                      }
+                      refreshing={false}
+                      onRefresh={onRefreshPageData}
+                      onEndReachedThreshold={0.01}
+                      onEndReached={onNextPageUsers}
+                      keyExtractor={item => item.id}
+                      ListHeaderComponent={
+                        <View style={style.contentWrapper}>
+                          <View style={style.titleWrapper}>
+                            <View style={style.textWrapper}>
+                              <Text style={style.textTitle}>Contact</Text>
+                            </View>
+                            <View style={style.textWrapper}>
+                              <Text style={style.subtitleText}>
+                                17 Contact Founds
+                              </Text>
+                            </View>
+                          </View>
                         </View>
-                        <View style={style.textWrapper}>
-                          <Text style={style.subtitleText}>
-                            17 Contact Founds
-                          </Text>
-                        </View>
-                      </View>
+                      }
+                      renderItem={({item, index}) => (
+                        <TouchableOpacity
+                          style={style.cardPadding}
+                          onPress={() => {
+                            dispatch(getOtherUser({token: token, id: item.id}));
+                            navigation.navigate('Input Amount', {
+                              data: {item},
+                            });
+                          }}>
+                          <UserCardContent
+                            image={{uri: item.photo_url}}
+                            icon={
+                              !item.photo_url ? (
+                                <Icon
+                                  name="ios-person"
+                                  size={widthResponsive(3)}
+                                />
+                              ) : null
+                            }
+                            name={item.username}
+                            // amount={item.}
+                            type={item.phone_number ?? '-'}
+                          />
+                        </TouchableOpacity>
+                      )}
+                    />
+                  ) : (
+                    <View style={style.boxEmpty}>
+                      <Text style={style.emptyText}>Data is empty</Text>
                     </View>
-                  }
-                  renderItem={({item, index}) => (
-                    <TouchableOpacity
-                      style={style.cardPadding}
-                      onPress={() => {
-                        dispatch(getOtherUser({token: token, id: item.id}));
-                        navigation.navigate('Input Amount', {
-                          data: {item},
-                        });
-                      }}>
-                      <UserCardContent
-                        image={{uri: item.photo_url}}
-                        icon={
-                          !item.photo_url ? (
-                            <Icon name="ios-person" size={widthResponsive(3)} />
-                          ) : null
-                        }
-                        name={item.username}
-                        // amount={item.}
-                        type={item.phone_number ?? '-'}
-                      />
-                    </TouchableOpacity>
                   )}
-                />
+                </>
               ) : (
                 <View style={style.boxEmpty}>
-                  <Text style={style.emptyText}>Data is empty</Text>
+                  <ActivityIndicator size={'large'} color={COLOR_PRIMARY} />
                 </View>
               )}
             </View>

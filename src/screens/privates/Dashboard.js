@@ -4,6 +4,7 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import React from 'react';
 import {
@@ -26,43 +27,44 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import {store} from '../../redux/store';
 import {getProfile} from '../../redux/asyncActions/user';
-import PushNotification from 'react-native-push-notification';
 import {getAllNotificationApp} from '../../redux/asyncActions/notification';
+import {onRefreshPage} from '../../redux/reducers/user';
+import RNBootSplash from "react-native-bootsplash";
 
 const Dashboard = ({navigation}) => {
   const token = useSelector(state => state.auth.token);
   const dispatch = useDispatch();
   const transaction = useSelector(() => store.getState().transaction.results);
   const profile = useSelector(() => store.getState().users.profile);
-  const successMsgTransaction = useSelector(
-    state => state.transaction.successMsg,
-  );
-  const errorMsgTransaction = useSelector(state => state.transaction.errorMsg);
-  const [showMsg, setShowMsg] = React.useState(false);
+  const notification = useSelector(state => state.notification.resultsRead);
   const onRefreshData = () => {
     dispatch(getSomeTransaction({token: token}));
     dispatch(getProfile({token: token}));
+    dispatch(onRefreshPage());
   };
   React.useEffect(() => {
-    if (token) {
-      dispatch(getSomeTransaction({token: token}));
-      setShowMsg(true);
-      setTimeout(() => {
-        setShowMsg(false);
-      }, 1500);
-    }
-    if (profile?.pin_number === null) {
-      navigation.navigate('Create Pin');
-    }
-  }, [dispatch, token, navigation, profile?.pin_number, profile.balance]);
+    const init = async () => {
+      dispatch(getAllNotificationApp({token: token}));
+      if (token) {
+        dispatch(getSomeTransaction({token: token}));
+      }
+      if (profile?.pin_number === null) {
+        navigation.navigate('Create Pin');
+      }
+    };
+    init().finally(async () => {
+      await RNBootSplash.hide({fade: true});
+    });
+  }, [dispatch, token, navigation, profile?.pin_number]);
   return (
     <DashboardLayout
       child={
         <>
           <StatusBar translucent={false} backgroundColor={COLOR_SECONDARY} />
+          <Image source={{uri: null}} />
           <UserCardHeader
             image={{
-              uri: profile?.photo_url,
+              uri: profile.photo_url,
             }}
             icon={
               !profile.photo_url ? (
@@ -71,20 +73,10 @@ const Dashboard = ({navigation}) => {
             }
             subtitle={`Rp. ${convertMoney(profile?.balance).split('IDR')[1]}`}
             onPress={() => {
-              dispatch(getAllNotificationApp({token: token}));
               navigation.navigate('Notification');
             }}
+            notifCount={notification?.length}
           />
-          {showMsg ? (
-            <>
-              {successMsgTransaction ? (
-                <SuccessCard text={successMsgTransaction} />
-              ) : null}
-              {errorMsgTransaction ? (
-                <ErrorCard text={errorMsgTransaction} />
-              ) : null}
-            </>
-          ) : null}
           <View style={styleLocal.buttonWrapper}>
             <ButtonTransction
               icon={'ios-arrow-up'}

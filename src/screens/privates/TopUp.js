@@ -23,6 +23,7 @@ import {
 } from '../../redux/asyncActions/transaction';
 import {getProfile} from '../../redux/asyncActions/user';
 import {store} from '../../redux/store';
+import { getAllNotificationApp } from '../../redux/asyncActions/notification';
 
 const content = [
   {keyContent: 1, content: 'Go to the nearest ATM or you can use E-Banking.'},
@@ -61,6 +62,10 @@ const TopUp = ({navigation}) => {
     // dispatch(onGetNewProfile());
     setTimeout(() => {
       dispatch(getSomeTransaction({token: token}));
+      dispatch(getSomeTransaction({token: token}));
+      dispatch(getAllNotificationApp({token: token}));
+      dispatch(getAllNotificationApp({token: token}));
+      dispatch(getProfile({token: token}));
       dispatch(getProfile({token: token}));
       dispatch(getProfile({token: token}));
       setModalVisible(!modalVisible);

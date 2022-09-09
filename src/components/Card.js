@@ -4,7 +4,13 @@ import styles from '../styles/global';
 import {COLOR_5, widthResponsive} from '../styles/constant';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export const UserCardHeader = ({image, subtitle, onPress, icon}) => {
+export const UserCardHeader = ({
+  image,
+  subtitle,
+  onPress,
+  icon,
+  notifCount,
+}) => {
   return (
     <>
       <View style={styles.userCardHeader}>
@@ -37,6 +43,15 @@ export const UserCardHeader = ({image, subtitle, onPress, icon}) => {
               size={widthResponsive(1.7)}
               color={'white'}
             />
+            {notifCount || notifCount > 0 ? (
+              <View style={style.countBox}>
+                <View>
+                  <Text style={style.textNotif}>
+                    {notifCount > 10 ? '10+' : notifCount}
+                  </Text>
+                </View>
+              </View>
+            ) : null}
           </TouchableOpacity>
         </View>
       </View>
@@ -395,5 +410,19 @@ const style = StyleSheet.create({
   amountTextStyle: {
     width: widthResponsive(7),
     alignItems: 'flex-end',
+  },
+  countBox: {
+    width: 20,
+    height: 20,
+    position: 'absolute',
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'orangered',
+    borderRadius: 20,
+  },
+  textNotif: {
+    color: 'white',
+    fontSize: widthResponsive(0.6),
   },
 });

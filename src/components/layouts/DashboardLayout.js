@@ -5,6 +5,7 @@ import styles from '../../styles/global';
 import {useDispatch, useSelector} from 'react-redux';
 import {getProfile} from '../../redux/asyncActions/user';
 import {getSomeTransaction} from '../../redux/asyncActions/transaction';
+import { onRefreshPage } from '../../redux/reducers/user';
 
 export const DashboardLayout = ({child}) => {
   const dispatch = useDispatch();
@@ -12,6 +13,7 @@ export const DashboardLayout = ({child}) => {
   const token = useSelector(state => state.auth.token);
   React.useEffect(() => {
     dispatch(getProfile({token: token}));
+    dispatch(onRefreshPage());
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -21,7 +23,7 @@ export const DashboardLayout = ({child}) => {
       // navigation.replace('Login');
     }
   }, [dispatch, token]);
-  return loading ? (
+  return loading && token ? (
     <View style={[style.container, style.horizontal]}>
       <ActivityIndicator size={'large'} color={COLOR_PRIMARY} />
     </View>

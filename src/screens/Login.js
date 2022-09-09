@@ -11,6 +11,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {login, logout} from '../redux/asyncActions/auth';
 import {ErrorCard, SuccessCard} from '../components/Card';
 import PushNotification from 'react-native-push-notification';
+import { store } from '../redux/store';
 
 const loginSchema = Yup.object().shape({
   email: Yup.string().email('Email format invalid').required(),
@@ -20,7 +21,7 @@ const loginSchema = Yup.object().shape({
 const Login = ({navigation}) => {
   const dispatch = useDispatch();
   const successMsg = useSelector(state => state.auth.successMsg);
-  const errorMsg = useSelector(state => state.auth.errorMsg);
+  const errorMsg = useSelector(() => store.getState().auth.errorMsg);
   const fcmToken = useSelector(state => state.notification.tokenFCM);
   const [showMsg, setShowMsg] = React.useState(false);
   // if (successMsg !== null || successMsg !== undefined) {
@@ -28,10 +29,12 @@ const Login = ({navigation}) => {
   // }
   React.useEffect(() => {
     setShowMsg(true);
-    setTimeout(() => {
-      setShowMsg(false);
-    }, 1500);
-  }, []);
+    if(errorMsg != null){
+      setTimeout(() => {
+        setShowMsg(false);
+      }, 1500);
+    }
+  }, [errorMsg]);
   const onLogin = val => {
     val.email = val.email.toLowerCase();
     val.fcmToken = fcmToken;
@@ -57,9 +60,9 @@ const Login = ({navigation}) => {
           />
           {showMsg ? (
             <>
-              {successMsg ? (
+              {successMsg != null ? (
                 <SuccessCard text={successMsg} />
-              ) : errorMsg ? (
+              ) : errorMsg != null ? (
                 <ErrorCard text={errorMsg} />
               ) : null}
             </>

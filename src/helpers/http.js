@@ -58,18 +58,18 @@ export const http = token => {
     baseURL: 'https://fw9-backend.vercel.app/',
   });
 
-  instance.interceptors.request.use(
-    config => {
-      console.log(config);
-      // const token = store.getState().auth.token;
-      // console.log(token);
-      return config;
-    },
-    e => {
-      console.log(e);
-      return Promise.reject(e);
-    },
-  );
+  // instance.interceptors.request.use(
+  //   config => {
+  //     console.log(config);
+  //     // const token = store.getState().auth.token;
+  //     // console.log(token);
+  //     return config;
+  //   },
+  //   e => {
+  //     console.log(e);
+  //     return Promise.reject(e);
+  //   },
+  // );
   instance.interceptors.response.use(
     response => {
       console.log(response);

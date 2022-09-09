@@ -29,6 +29,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {updateProfile} from '../../redux/asyncActions/profile';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { store } from '../../redux/store';
 
 const editProfileSchema = Yup.object().shape({
   firstName: Yup.string().required(),
@@ -38,7 +39,8 @@ const editProfileSchema = Yup.object().shape({
 const Profile = ({route, navigation}) => {
   const dispatch = useDispatch();
   const profile = useSelector(state => state.users.profile);
-  const errorMsg = useSelector(state => state.profile.errorMsg);
+  const errorMsg = useSelector(() => store.getState().profile.errorMsg);
+  const successMsg = useSelector(() => store.getState().profile.successMsg);
   const token = useSelector(state => state.auth.token);
   const fcmToken = useSelector(state => state.notification.tokenFCM);
   const profileUpdateMsg = useSelector(state => state.profile.successMsg);
@@ -51,20 +53,47 @@ const Profile = ({route, navigation}) => {
     setErr();
     val.token = token;
     dispatch(updateProfile(val));
-    if (errorMsg) {
-      setErr(errorMsg);
+    if (!errorMsg) {
+      Alert.alert('Success', 'You have been change your name.', [
+        {
+          onPress: () => {
+            dispatch(getUpdate());
+            setModalVisible(!modalVisible);
+          },
+        },
+      ]);
     } else {
-      setTimeout(() => {
-        dispatch(getUpdate());
-        setModalVisible(!modalVisible);
-      }, 1000);
+      Alert.alert('Failed', 'Your update is failed.', [
+        {
+          onPress: () => {
+            dispatch(getUpdate());
+            setModalVisible(!modalVisible);
+          },
+        },
+      ]);
     }
+    // if (errorMsg) {
+    //   setErr(errorMsg);
+    // } else {
+    //   setTimeout(() => {
+    //     dispatch(getUpdate());
+    //     setModalVisible(!modalVisible);
+    //   }, 1000);
+    // }
   };
 
   const onUploudPhoto = async types => {
+    const optionCamera = {
+      mediaType: 'photo',
+      maxWidth: 400,
+      maxHeight: 400,
+    };
+    const optionGallery = {
+      mediaType: 'photo',
+    };
     const typePicked = types
-      ? await launchCamera()
-      : await launchImageLibrary();
+      ? await launchCamera(optionCamera)
+      : await launchImageLibrary(optionGallery);
     // console.log(type);
     if (typePicked) {
       const imagePick = typePicked.assets[0];
@@ -197,7 +226,9 @@ const Profile = ({route, navigation}) => {
                       handleSubmit,
                       values,
                     }) => (
-                      <TouchableOpacity style={style.centeredView} onPress={()=>setModalVisible(!modalVisible)}>
+                      <TouchableOpacity
+                        style={style.centeredView}
+                        onPress={() => setModalVisible(!modalVisible)}>
                         <View style={style.modalView}>
                           <ScrollView>
                             <Text style={style.modalText}>Edit name</Text>

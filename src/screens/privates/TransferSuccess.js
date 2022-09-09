@@ -8,6 +8,7 @@ import {UserCardContent2} from '../../components/Card';
 import {useDispatch, useSelector} from 'react-redux';
 import {getProfile} from '../../redux/asyncActions/user';
 import {getSomeTransaction} from '../../redux/asyncActions/transaction';
+import { getAllNotificationApp } from '../../redux/asyncActions/notification';
 const TransferSuccess = ({route, navigation}) => {
   const data = route.params.data;
   const dispatch = useDispatch();
@@ -39,6 +40,11 @@ const TransferSuccess = ({route, navigation}) => {
               gotoDashboard={() => {
                 navigation.popToTop();
                 dispatch(getSomeTransaction({token: token}));
+                dispatch(getSomeTransaction({token: token}));
+                dispatch(getSomeTransaction({token: token}));
+                dispatch(getAllNotificationApp({token: token}));
+                dispatch(getAllNotificationApp({token: token}));
+                dispatch(getAllNotificationApp({token: token}));
                 dispatch(getProfile({token: token}));
                 dispatch(getProfile({token: token}));
                 dispatch(getProfile({token: token}));

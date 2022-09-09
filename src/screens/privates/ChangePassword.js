@@ -11,6 +11,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {updatePassword} from '../../redux/asyncActions/profile';
 import {getUpdate} from '../../redux/reducers/profile';
+import {store} from '../../redux/store';
 
 const passwordSchema = Yup.object().shape({
   currentPassword: Yup.string()
@@ -27,24 +28,26 @@ const passwordSchema = Yup.object().shape({
 const ChangePassword = ({route, navigation}) => {
   const dispatch = useDispatch();
   const token = useSelector(state => state.auth.token);
-  const errorMsg = useSelector(state => state.profile.errorMsg);
+  const errorMsg = useSelector(() => store.getState().profile.errorMsg);
   const [err, setErr] = React.useState();
-  const onUpdatePassword = val => {
-    console.log(val.newPassword !== val.currentPassword);
+  const onUpdatePassword = async val => {
     if (val.newPassword !== val.repeatPassword) {
       setErr('Confirmation password is invalid');
     } else {
       setErr();
       val.token = token;
-      dispatch(updatePassword(val));
+      await dispatch(updatePassword(val));
       if (errorMsg) {
         setErr(errorMsg);
-      } else {
-        setTimeout(() => {
-          dispatch(getUpdate());
-          navigation.popToTop();
-        }, 1000);
+        dispatch(getUpdate());
+        navigation.popToTop();
       }
+      // else {
+      //   setTimeout(() => {
+      //     dispatch(getUpdate());
+      //     navigation.popToTop();
+      //   }, 1000);
+      // }
     }
   };
   React.useEffect(() => {
@@ -74,9 +77,9 @@ const ChangePassword = ({route, navigation}) => {
                     password twice.
                   </Text>
                 </View>
-                {err ? (
+                {errorMsg ? (
                   <View style={style.fieldWrapper}>
-                    <ErrorCard text={err} />
+                    <ErrorCard text={errorMsg} />
                   </View>
                 ) : null}
                 <View style={[style.inputWrapper, styles.rootFlex1]}>

@@ -45,11 +45,7 @@ const TransferFailed = ({route, navigation}) => {
                     <View>
                       <UserCardContent2
                         name={profile.username}
-                        type={
-                          profile.phone_number[0]
-                            ? profile.phone_number[0]
-                            : '-'
-                        }
+                        type={profile.phone_number ? profile.phone_number : '-'}
                         image={{uri: profile.photo_url}}
                         icon={
                           !profile.photo_url ? (
@@ -67,9 +63,7 @@ const TransferFailed = ({route, navigation}) => {
                       <UserCardContent2
                         name={otherUser.username ?? 'user recipient'}
                         type={
-                          otherUser.phone_number
-                            ? otherUser.phone_number[0]
-                            : '-'
+                          otherUser.phone_number ? otherUser.phone_number : '-'
                         }
                         image={{uri: otherUser.photo_url}}
                         icon={

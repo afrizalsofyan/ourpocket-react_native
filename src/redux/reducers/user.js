@@ -32,7 +32,7 @@ const users = createSlice({
       state.results = action.payload.result;
       state.infoData = action.payload.info;
       state.successMsg = action.payload.message;
-      if(!state.errorMsg){
+      if (!state.errorMsg) {
         state.resultNextUser.push(...action.payload.result);
       }
     });
@@ -42,7 +42,7 @@ const users = createSlice({
     });
     build.addCase(getProfile.fulfilled, (state, action) => {
       state.errorMsg = action.payload.errorMsg;
-      if(!state.errorMsg){
+      if (!state.errorMsg) {
         state.profile = action.payload.result;
         state.successMsg = action.payload.message;
       }
