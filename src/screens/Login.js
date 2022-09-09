@@ -8,10 +8,9 @@ import Button from '../components/Button';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useDispatch, useSelector} from 'react-redux';
-import {login, logout} from '../redux/asyncActions/auth';
+import {login} from '../redux/asyncActions/auth';
 import {ErrorCard, SuccessCard} from '../components/Card';
-import PushNotification from 'react-native-push-notification';
-import { store } from '../redux/store';
+import {store} from '../redux/store';
 
 const loginSchema = Yup.object().shape({
   email: Yup.string().email('Email format invalid').required(),
@@ -29,7 +28,7 @@ const Login = ({navigation}) => {
   // }
   React.useEffect(() => {
     setShowMsg(true);
-    if(errorMsg != null){
+    if (errorMsg != null) {
       setTimeout(() => {
         setShowMsg(false);
       }, 1500);
@@ -39,14 +38,6 @@ const Login = ({navigation}) => {
     val.email = val.email.toLowerCase();
     val.fcmToken = fcmToken;
     dispatch(login(val));
-    // PushNotification.localNotification({
-    //   channelId: 'login',
-    //   title: 'Welcome',
-    //   message: 'Welcome back. Have a nice day.',
-    // });
-    // PushNotification.getChannels(channel =>
-    //   console.log('CHANEL===========', channel),
-    // );
   };
   return (
     <AuthLayout

@@ -29,7 +29,8 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {updateProfile} from '../../redux/asyncActions/profile';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import { store } from '../../redux/store';
+import {store} from '../../redux/store';
+import PushNotification from 'react-native-push-notification';
 
 const editProfileSchema = Yup.object().shape({
   firstName: Yup.string().required(),
@@ -40,7 +41,6 @@ const Profile = ({route, navigation}) => {
   const dispatch = useDispatch();
   const profile = useSelector(state => state.users.profile);
   const errorMsg = useSelector(() => store.getState().profile.errorMsg);
-  const successMsg = useSelector(() => store.getState().profile.successMsg);
   const token = useSelector(state => state.auth.token);
   const fcmToken = useSelector(state => state.notification.tokenFCM);
   const profileUpdateMsg = useSelector(state => state.profile.successMsg);
@@ -48,7 +48,6 @@ const Profile = ({route, navigation}) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalPhoto, setModalPhoto] = React.useState(false);
   const [err, setErr] = React.useState();
-  // const [img, setImg] = React.useState();
   const onUpdateName = val => {
     setErr();
     val.token = token;
@@ -72,14 +71,6 @@ const Profile = ({route, navigation}) => {
         },
       ]);
     }
-    // if (errorMsg) {
-    //   setErr(errorMsg);
-    // } else {
-    //   setTimeout(() => {
-    //     dispatch(getUpdate());
-    //     setModalVisible(!modalVisible);
-    //   }, 1000);
-    // }
   };
 
   const onUploudPhoto = async types => {
@@ -361,6 +352,12 @@ const Profile = ({route, navigation}) => {
                     onPress={() => {
                       dispatch(logout({token: token, fcmToken: fcmToken}));
                       dispatch(onLogout());
+                      PushNotification.localNotification({
+                        channelId: 'login',
+                        title: 'Logout Success',
+                        message:
+                          'Hi, you logout from our Apps. See you next time :)',
+                      });
                     }}
                   />
                 </View>
