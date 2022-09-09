@@ -113,6 +113,7 @@ const Profile = ({route, navigation}) => {
             {
               onPress: () => {
                 dispatch(getUpdate());
+                dispatch(getUpdate());
                 setModalPhoto(false);
               },
             },

@@ -1,4 +1,4 @@
-import {View, Text, ScrollView, StyleSheet} from 'react-native';
+import {View, Text, ScrollView, StyleSheet, Dimensions} from 'react-native';
 import React from 'react';
 import {DashboardLayout} from '../../components/layouts/DashboardLayout';
 import styles from '../../styles/global';
@@ -144,6 +144,7 @@ const style = StyleSheet.create({
   root: {
     paddingVertical: widthResponsive(2),
     backgroundColor: 'white',
+    height: Dimensions.get('screen').height - widthResponsive(11),
   },
   textHeaderStyle: {
     textAlign: 'center',

@@ -20,7 +20,7 @@ const ProfileStack = () => {
     dispatch(getProfile({token: token}));
   }, [dispatch, token]);
   return (
-    <Stack.Navigator initialRouteName="Pofile Stack">
+    <Stack.Navigator initialRouteName="Pofile">
       <Stack.Screen
         options={{headerShown: false}}
         name="Profile"

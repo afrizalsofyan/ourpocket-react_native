@@ -9,7 +9,6 @@ export const updatePhone = createAsyncThunk(
     try {
       const send = qs.stringify({
         phoneNumber: request.phone,
-        indexPhone: 0,
       });
       const {data} = await http(request.token).patch('profile/phone', send);
       return data;

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import {
@@ -19,9 +20,12 @@ import Button from '../../components/Button';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useSelector} from 'react-redux';
+import {store} from '../../redux/store';
 
 const inputSchema = Yup.object().shape({
-  amount: Yup.number().min(10000).required(),
+  amount: Yup.number()
+    .min(10000, `Minimum transfer is Rp. 10,000.00`)
+    .required(),
   notes: Yup.string(),
 });
 
@@ -32,12 +36,16 @@ const TransferInputAmount = ({route, navigation}) => {
   console.log(otherUser);
   const profile = useSelector(state => state.users.profile);
   const onSubmitAmount = val => {
-    const sendData = {
-      ...val,
-      ...user,
-      balanceLeft: convertMoney(profile.balance - val.amount).split('IDR')[1],
-    };
-    navigation.navigate('Transfer Confirmation', {sendData});
+    if (val.amount > profile.balance) {
+      Alert.alert('Invalid Input', 'Your input is more than your balance!!');
+    } else {
+      const sendData = {
+        ...val,
+        ...user,
+        balanceLeft: convertMoney(profile.balance - val.amount).split('IDR')[1],
+      };
+      navigation.navigate('Transfer Confirmation', {sendData});
+    }
   };
 
   return (
