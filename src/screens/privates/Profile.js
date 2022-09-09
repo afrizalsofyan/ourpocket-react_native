@@ -24,7 +24,7 @@ import {CardButton} from '../../components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {logout, onLogout} from '../../redux/reducers/auth';
 import {getProfile} from '../../redux/asyncActions/user';
-import {getUpdate} from '../../redux/reducers/profile';
+import {deletePhoto, getUpdate} from '../../redux/reducers/profile';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {updateProfile} from '../../redux/asyncActions/profile';
@@ -56,7 +56,7 @@ const Profile = ({route, navigation}) => {
       Alert.alert('Success', 'You have been change your name.', [
         {
           onPress: () => {
-            dispatch(getUpdate());
+            dispatch(getProfile({token: token}));
             setModalVisible(!modalVisible);
           },
         },
@@ -65,8 +65,31 @@ const Profile = ({route, navigation}) => {
       Alert.alert('Failed', 'Your update is failed.', [
         {
           onPress: () => {
-            dispatch(getUpdate());
+            dispatch(getProfile({token: token}));
             setModalVisible(!modalVisible);
+          },
+        },
+      ]);
+    }
+  };
+
+  const onDeletePhoto = () => {
+    dispatch(deletePhoto({token: token}));
+    if (!errorMsg) {
+      Alert.alert('Success', 'Your photo has deleted.', [
+        {
+          onPress: () => {
+            dispatch(getUpdate());
+            setModalPhoto(false);
+          },
+        },
+      ]);
+    } else {
+      Alert.alert('Failed', 'Delete photo failed.', [
+        {
+          onPress: () => {
+            dispatch(getUpdate());
+            setModalPhoto(false);
           },
         },
       ]);
@@ -184,6 +207,27 @@ const Profile = ({route, navigation}) => {
                           <Text style={style.btnImageText}>Camera</Text>
                         </TouchableOpacity>
                       </View>
+                      {profile.photo_url ? (
+                        <>
+                          <Text
+                            style={[
+                              style.deletePhotoTitle,
+                              style.btnImageText,
+                            ]}>
+                            Delete Your Photo
+                          </Text>
+                          <View style={style.deleteWrapper}>
+                            <TouchableOpacity
+                              style={style.btnImgTextStyle}
+                              onPress={onDeletePhoto}>
+                              <Icon
+                                name="ios-trash"
+                                size={widthResponsive(2)}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                        </>
+                      ) : null}
                     </View>
                   </TouchableOpacity>
                 </Modal>
@@ -352,12 +396,12 @@ const Profile = ({route, navigation}) => {
                     onPress={() => {
                       dispatch(logout({token: token, fcmToken: fcmToken}));
                       dispatch(onLogout());
-                      PushNotification.localNotification({
-                        channelId: 'login',
-                        title: 'Logout Success',
-                        message:
-                          'Hi, you logout from our Apps. See you next time :)',
-                      });
+                      // PushNotification.localNotification({
+                      //   channelId: 'login',
+                      //   title: 'Logout Success',
+                      //   message:
+                      //     'Hi, you logout from our Apps. See you next time :)',
+                      // });
                     }}
                   />
                 </View>
@@ -562,6 +606,11 @@ const style = StyleSheet.create({
   },
   errorCardMessage: {
     color: 'white',
+    fontSize: widthResponsive(0.8),
+    fontWeight: 'bold',
+  },
+  deletePhotoTitle: {
+    marginVertical: widthResponsive(1),
     fontSize: widthResponsive(0.8),
     fontWeight: 'bold',
   },

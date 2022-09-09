@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {
   addPhone,
+  deletePhoto,
   updatePassword,
   updatePhone,
   updatePin,
@@ -67,9 +68,17 @@ const profile = createSlice({
       state.errorMsg = action.payload.errorMsg;
       state.successMsg = action.payload.message;
     });
+    build.addCase(deletePhoto.pending, state => {
+      state.errorMsg = null;
+      state.successMsg = null;
+    });
+    build.addCase(deletePhoto.fulfilled, (state, action) => {
+      state.successMsg = action.payload.message;
+      state.errorMsg = action.payload.errorMsg;
+    });
   },
 });
 
-export {addPhone, updatePhone, updatePassword, updatePin};
+export {addPhone, updatePhone, updatePassword, updatePin, deletePhoto};
 export const {getUpdate} = profile.actions;
 export default profile.reducer;

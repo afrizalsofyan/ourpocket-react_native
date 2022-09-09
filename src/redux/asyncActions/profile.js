@@ -105,3 +105,17 @@ export const updateProfile = createAsyncThunk(
     }
   },
 );
+
+export const deletePhoto = createAsyncThunk(
+  'profile/deletePhoto',
+  async request => {
+    const result = {};
+    try {
+      const {data} = await http(request.token).delete('profile/photo');
+      return data;
+    } catch (error) {
+      result.errorMsg = error.response.data.message;
+      return result;
+    }
+  },
+);
